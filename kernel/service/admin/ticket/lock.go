@@ -1,0 +1,5 @@
+package ticket
+
+func Lock() {
+
+}

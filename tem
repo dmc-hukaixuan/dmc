@@ -1,0 +1,116 @@
+nodeDelete: []
+nodeLocation:
+  Node-5fd90b5020fdfc8ea55e48639348c4f1:
+    left: 295px
+    top: 190px
+  Node-6a9450eb4ac35d86f5891e4646ab5e73:
+    left: auto
+    top: auto
+  Node-75781cd3245ad85643bb103198a17ab7:
+    left: 350px
+    top: 100px
+  Node-c12fb0f26ac5da809bc077a4858fdccb:
+    left: 350px
+    top: 280px
+  Node-e3a524543ac6baaeebe01ac816e8b1cd:
+    left: 660px
+    top: 100px
+  Node-ecd67095db3f6dafd56ab0ce3f9518d3:
+    left: 945px
+    top: 127px
+nodeStateList: []
+nodeValue:
+  Node-5fd90b5020fdfc8ea55e48639348c4f1:
+    id: ""
+    name: Process node
+    templateList: []
+  Node-6a9450eb4ac35d86f5891e4646ab5e73:
+    id: ""
+    name: wss
+    state: ""
+    templateList:
+    - "106"
+    - "107"
+    - "109"
+  Node-75781cd3245ad85643bb103198a17ab7:
+    id: ""
+    name: Start
+    templateList: []
+  Node-c12fb0f26ac5da809bc077a4858fdccb:
+    id: ""
+    name: End
+    templateList: []
+  Node-e3a524543ac6baaeebe01ac816e8b1cd:
+    id: ""
+    name: 流程节点
+    state: ""
+    templateList: []
+  Node-ecd67095db3f6dafd56ab0ce3f9518d3:
+    id: ""
+    name: 流程节点
+    state: ""
+    templateList: []
+processConfig:
+  Description: ""
+  EndNode: Node-c12fb0f26ac5da809bc077a4858fdccb
+  FirstNode: Node-5fd90b5020fdfc8ea55e48639348c4f1
+  Path:
+    Node-5fd90b5020fdfc8ea55e48639348c4f1:
+      Transition-6908c81d61bb53aae6d7836d025d94d5:
+        NextNode: Node-6a9450eb4ac35d86f5891e4646ab5e73
+        TransitionAction: []
+      Transition-e88a741cbf602075f9e5e5e6ef91ba9b:
+        NextNode: Node-c12fb0f26ac5da809bc077a4858fdccb
+        TransitionAction: []
+    Node-6a9450eb4ac35d86f5891e4646ab5e73:
+      Transition-f2bcf9225323e24c1c6cf49519f533eb:
+        NextNode: Node-ecd67095db3f6dafd56ab0ce3f9518d3
+        TransitionAction: []
+    Node-75781cd3245ad85643bb103198a17ab7:
+      Transition-5c0f07be6ff9c93c99bd84ef9ac52423:
+        NextNode: Node-5fd90b5020fdfc8ea55e48639348c4f1
+        TransitionAction: []
+    Node-c12fb0f26ac5da809bc077a4858fdccb: {}
+    Node-e3a524543ac6baaeebe01ac816e8b1cd: {}
+    Node-ecd67095db3f6dafd56ab0ce3f9518d3: {}
+  StartNode: Node-75781cd3245ad85643bb103198a17ab7
+  groupInfo:
+    order: []
+    value: {}
+  transitionActionValue: {}
+processDescription: ce
+processID: ""
+processName: ce
+processStateEntityID: S1
+processType: "14"
+transitionActionDelete: []
+transitionDelete: []
+transitionValue:
+  Transition-5c0f07be6ff9c93c99bd84ef9ac52423:
+    Condition: {}
+    Count: []
+    conditionLinking: or
+    conditionName: Process transition
+    id: ""
+  Transition-6908c81d61bb53aae6d7836d025d94d5:
+    Condition: {}
+    Count: []
+    conditionLinking: or
+    conditionName: Process transition
+    id: ""
+    sourceP: Right
+    targetP: Left
+  Transition-e88a741cbf602075f9e5e5e6ef91ba9b:
+    Condition: {}
+    Count: []
+    conditionLinking: or
+    conditionName: Process transition
+    id: ""
+  Transition-f2bcf9225323e24c1c6cf49519f533eb:
+    Condition: {}
+    Count: []
+    conditionLinking: or
+    conditionName: Process transition
+    id: ""
+    sourceP: Right
+    targetP: Continuous

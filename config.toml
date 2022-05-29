@@ -1,0 +1,23 @@
+[systeminfo]
+appname = "service cool"
+port = 8503
+companyname = "xian diantong software"
+
+[mysql]
+host = "127.0.0.1"
+dbname = "test"
+password = "mysql"
+port = 3306
+tablePrefix = ""
+user = "root"
+
+# host = "192.168.26.6"
+# dbname = "sc_otrs"
+# user = "liehu"
+# password = "gxDY&r@BVGm2"
+# port = 3306
+# tablePrefix = ""
+
+[log]
+level = "debug"
+path = "logs/error.log"
