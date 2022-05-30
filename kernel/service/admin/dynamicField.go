@@ -7,9 +7,9 @@ import (
 
 type DynamicField struct{}
 
-var DynamicFieldA = new(DynamicField)
+//var DynamicFieldA = new(DynamicField)
 
-func (d *DynamicField) DynamicFieldList(fieldType string) (dfenter []model.DynamicField, err error) {
+func DynamicFieldList(fieldType string) (dfenter []model.DynamicField, err error) {
 	// var df []model.DynamicField
 	selectSQL := `SELECT id, internal_field, name, label, field_type, object_type,
 				config, valid_id, create_time, create_by, change_time, change_by FROM dynamic_field WHERE object_type = ?`
@@ -18,20 +18,4 @@ func (d *DynamicField) DynamicFieldList(fieldType string) (dfenter []model.Dynam
 		return
 	}
 	return dfenter, err
-}
-
-func (d *DynamicField) DynamicFieldGet() {
-
-}
-
-func (d *DynamicField) DynamicFieldAdd() {
-	
-}
-
-func (d *DynamicField) DynamicFieldUpdate() {
-	
-}
-
-func (d *DynamicField) DynamicFieldDelete() {
-	
 }

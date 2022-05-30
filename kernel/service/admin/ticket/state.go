@@ -60,7 +60,6 @@ func StateList(validID int) map[string]string {
 	}
 	// do loop, build a json string
 	for _, v := range tp {
-		fmt.Println("v", v.ID)
 		stateList[strconv.Itoa(v.ID)] = v.Name
 	}
 	return stateList

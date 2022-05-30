@@ -47,7 +47,6 @@ func TypeList(validID int) map[string]string {
 	}
 	// do loop, build a json string
 	for _, v := range tp {
-		fmt.Println("v", v.ID)
 		typeList[strconv.Itoa(v.ID)] = v.Name
 	}
 	return typeList
