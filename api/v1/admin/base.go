@@ -11,6 +11,9 @@ package admin
 type Admin struct {
 	ProcessManagementApi
 	TicketTemplateApi
+	RoleApi
+	DynamicFieldApi
+	WorkingTimeApi
 }
 
 // check request is a json string

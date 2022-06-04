@@ -1,14 +1,20 @@
 package admin
 
 import (
+	model "dmc/kernel/model/admin"
 	"dmc/kernel/model/common/request"
 	"dmc/kernel/model/common/response"
-	model "dmc/kernel/model/ticket"
-	system "dmc/kernel/service/admin/ticket"
+	"dmc/kernel/service/admin"
+	"time"
+
+	templateObject "dmc/kernel/service/admin/template"
+	dynamicFieldObject "dmc/kernel/service/template"
 	ticketField "dmc/kernel/service/template/ticket"
 	"fmt"
+	"strconv"
 
 	"github.com/gin-gonic/gin"
+	"github.com/mitchellh/mapstructure"
 )
 
 type TicketTemplateApi struct {
@@ -17,145 +23,85 @@ type TicketTemplateApi struct {
 
 // ticket template base
 func (p *TicketTemplateApi) Base(c *gin.Context) {
-
 	var sd request.SubActionData
+	userID := 1
 	_ = c.ShouldBindJSON(&sd)
-	fmt.Println("sd ", sd.SubAction)
+	fmt.Println("sd -------1111---:", sd)
 	if sd.SubAction == "edit" {
-		templateID, _ := sd.Data["templateID"]
-		fmt.Println(" templateID", templateID)
-		TicketTemplateEdit("", c)
+		templateID, _ := sd.Data["templateID"].(string)
+		templateID1, _ := strconv.Atoi(templateID)
+		fmt.Println(" templateID", templateID, userID)
+		TicketTemplateEdit(templateID1, c)
+	} else if sd.SubAction == "save" {
+		var td model.TemplateData
+		mapstructure.Decode(sd.Data, &td)
+		ticketTemplateSave(td, c)
+	} else if sd.SubAction == "delete" {
+		// delete tempalte
+		//ticketTemplateDelete(1)
+	} else {
+		templateList, _ := templateObject.TicketTemplateList()
+		response.SuccessWithDetailed(gin.H{
+			"templateList": &templateList,
+		}, "获取成功", c)
 	}
 }
 
-type TemplateData struct {
-	ID              int                     `json:"id"`
-	Name            string                  `json:"name"`
-	Web             string                  `json:"web"`
-	Mobile          string                  `json:"mobile"`
-	Valid_id        string                  `json:"valid_id"`
-	Describe        string                  `json:"describe"`
-	Icon            string                  `json:"icon"`
-	Color           string                  `json:"color"`
-	Roles           []int                   `json:"roles"`
-	Type            string                  `json:"type"`
-	FilterCondition *map[string]interface{} `json:"fieldOrder"`
-	FieldOrder      []string                `json:"fieldOrder"`
-	FieldData       *model.FeildData        `json:"fiedlData"`
-	DisplayType     string                  `json:"display_type"`
-}
-
 // get ticket template data ,for add or edit a template
-func TicketTemplateEdit(templateID string, c *gin.Context) {
+func TicketTemplateEdit(templateID int, c *gin.Context) {
 	// get ticket template data
-
+	templateData, templateFieldList, _ := templateObject.TicketTemplateGet(templateID)
 	// template base field
 
 	// ticket base field
-	baseFeild := map[string]*model.FeildData{
-		"name": &model.FeildData{
-			Name:      "name",
-			Default:   "",
-			FieldType: "text",
-			Label:     "Process name",
-			Display:   2,
-		},
-		"description": &model.FeildData{
-			Name:      "description",
-			Default:   "",
-			FieldType: "textarea",
-			Label:     "Description",
-			Display:   1,
-		},
-		"valid": &model.FeildData{
-			Name:      "valid",
-			Default:   "",
-			FieldType: "dropdown",
-			Options: map[string]string{
-				"1": "Valid",
-				"2": "Invalid",
-			},
-			Label:   "Description",
-			Display: 1,
-		},
-		"showLocation": &model.FeildData{
-			Name:      "valid",
-			Default:   "",
-			FieldType: "dropdown",
+	baseField := map[string]interface{}{
+		"name":        templateData.Name,
+		"description": templateData.DisplayType,
+		"valid":       templateData.ValidID,
+		"showLocation": &model.FieldData{
+			Default: "",
 			Options: map[string]string{
 				"mobile": "Show Mobile",
 				"web":    "Show Web",
 			},
-			Label:   "Description",
-			Display: 1,
 		},
-		"displayType": &model.FeildData{
-			Name:      "valid",
-			Default:   "",
-			FieldType: "dropdown",
+		"displayType": &model.FieldData{
+			Default: templateData.DisplayType,
 			Options: map[string]string{
 				"1": "show form, edit field",
 				"2": "not show form",
 				"3": "open dailog",
 			},
-			Label:   "Description",
-			Display: 1,
 		},
-		"templateType": &model.FeildData{
-			Name:      "valid",
-			Default:   "",
-			FieldType: "dropdown",
+		"templateType": &model.FieldData{
+			Default: templateData.Type,
 			Options: map[string]string{
 				"create": "Create Normal Ticket",
 				"const":  "Ticket Detail Show",
 				"deal":   "Processing Ticket",
 			},
-			Label:   "Description",
-			Display: 1,
 		},
-		"roles": &model.FeildData{
-			Name:      "valid",
-			Default:   "",
+		"roles": &model.FieldData{
+			Default:   templateData.Roles,
 			FieldType: "dropdown",
 			Options: map[string]string{
 				"1": "Valid",
 				"2": "Invalid",
 			},
-			Label:   "Description",
-			Display: 1,
 		},
-		"color": &model.FeildData{
-			Name:      "valid",
-			Default:   "",
-			FieldType: "dropdown",
-			Options: map[string]string{
-				"1": "Valid",
-				"2": "Invalid",
-			},
-			Label:   "Description",
-			Display: 1,
-		},
-		"icon": &model.FeildData{
-			Name:      "valid",
-			Default:   "",
-			FieldType: "dropdown",
-			Options: map[string]string{
-				"1": "Valid",
-				"2": "Invalid",
-			},
-			Label:   "Description",
-			Display: 1,
-		},
+		"color": templateData.Color,
+		"icon":  templateData.Icon,
 	}
-	fmt.Println(" baseFeild", baseFeild)
+	//fmt.Println(" baseField", baseField)
 	// dynamic field
-	allticketField()
+	templateFieldData, fieldOrder := allticketField(templateID, templateFieldList, templateData)
 
 	response.SuccessWithDetailed(gin.H{
-		"base": baseFeild,
+		"base": baseField,
 		//	"filter":         allticketField(),
-		"template":       "",
-		"ticketRequired": "",
+		"templateField":      templateFieldData,
+		"templateFieldOrder": fieldOrder,
+		"ticketRequired":     "",
 	}, "获取成功", c)
 
 }
@@ -178,89 +124,75 @@ func (p *TicketTemplateApi) TicketTemplateGet(c *gin.Context) {
 }
 
 // add copy etc...
-func (p *TicketTemplateApi) TicketTemplateAdd(c *gin.Context) {
+func (p *TicketTemplateApi) TicketTemplateUpdate(c *gin.Context) {
 	// parse template data
-
 }
 
-// ticket template
+// save ticket template
+func ticketTemplateSave(td model.TemplateData, c *gin.Context) {
+	// td
+	if td.ID != 0 {
+		fmt.Println("td -6666-- ", td.Name)
+		td.Changetime = time.Now().Format("2006-01-02 15:04:05")
+		td.Changeby = 1
+		if _, err := templateObject.TicketTemplateUpdate(td); err != nil {
+			fmt.Println("ProcessUpdate  err :", err)
+			response.FailWithMessage("更新失败", c)
+		} else {
+			// fmt.Println("list ----------------:", typelist, "total:", typelist)
+			response.SuccessWithMessage("更新成功", c)
+		}
+	} else {
+		// add template to db
+		td.Createtime = time.Now().Format("2006-01-02 15:04:05")
+		td.Createby = 1
+		td.Changetime = time.Now().Format("2006-01-02 15:04:05")
+		td.Changeby = 1
+		templateID, _ := templateObject.TicketTemplateAdd(td)
+		fmt.Println("templateID: ", templateID)
+	}
+}
+
+// ticket template, add copy etc...
 func ticketTemplateUpdate() {
 
 }
 
 // remove ticket template
-func ticketTemplateDelete() {
+func ticketTemplateDelete(templateID int) {
 
 }
 
-func ticketTemplateList() {
+// get ticket template list data
+// func ticketTemplateList() {
+// 	templateList, _ := templateObject.TicketTemplateList()
+// 	fmt.Println("templateList ", templateList)
+// }
 
-}
-
-//
-func allticketField() interface{} {
-	pl := system.PriorityList(1)
-
-	fmt.Println("pl ", pl)
+// get all field
+func allticketField(templateID int, templateFieldList map[string]model.TemplateField, templatedata model.TemplateData) (map[string]model.FieldData, []string) {
+	fieldInfo := map[string]model.FieldData{}
+	templateField := []string{"title", "type", "owner", "customeruser", "priority", "role", "Body", "state", "source", "service", "sla"}
 	// ticketFieldObject := ticketField.TicketStartandField()
-	templateField := []string{"title", "type"}
+	if templateID > 0 {
+		templateField = templatedata.FieldOrder
+		fieldInfo = templatedata.FieldData
+	}
+
+	// get ticket each field detail info
 	for _, v := range templateField {
-		fmt.Println("v ", v)
-		fieldObject := ticketField.TicketStartandField(v).TemplateEditRender(v,)
-
-		fmt.Println("fieldInfo ", fieldObject)
+		fieldObject := ticketField.TicketStartandField(v).TemplateEditRender(v, templateFieldList[v])
+		fieldInfo[v] = fieldObject
 	}
-
-	field := map[string]*model.FeildData{
-		"title": &model.FeildData{
-			Name:        "title",
-			Default:     "",
-			FieldType:   "text",
-			Label:       "Title",
-			Placeholder: "",
-			Display:     1,
-			Regex:       "",
-			RegexError:  "",
-			Width:       2,
-		},
-		"subject": &model.FeildData{
-			Name:        "title",
-			Default:     "",
-			FieldType:   "text",
-			Placeholder: "",
-			Label:       "Title",
-			Display:     1,
-			Regex:       "",
-			RegexError:  "",
-			Width:       16,
-		},
-		"type": &model.FeildData{
-			Name:        "title",
-			Default:     "",
-			FieldType:   "text",
-			Label:       "Title",
-			Display:     1,
-			OptionsType: "",
-			Options:     system.StateList(1),
-			Regex:       "",
-			RegexError:  "",
-			Width:       16,
-		},
-		"state":           &model.FeildData{},
-		"role":            &model.FeildData{},
-		"source":          &model.FeildData{},
-		"userid":          &model.FeildData{},
-		"department":      &model.FeildData{},
-		"lock":            &model.FeildData{},
-		"priority":        &model.FeildData{},
-		"service":         &model.FeildData{},
-		"sla":             &model.FeildData{},
-		"real_start_time": &model.FeildData{},
-		"real_end_time":   &model.FeildData{},
-		"customerid":      &model.FeildData{},
-	}
-
 	// get dynamic field list
+	df, _ := admin.DynamicFieldList("Ticket")
+	//fmt.Println("df list :", df)
+	// do loop dynamicfield list
+	for _, v := range df {
+		//fmt.Println("v0", v)
+		field := dynamicFieldObject.DynamicField(v.FieldType).TemplateEditRender(v.Name, v.Label, &v.Config, templateFieldList[v.Name])
+		fieldInfo["DynamicField_"+v.Name] = field
+	}
 
-	return field
+	return fieldInfo, templateField
 }
