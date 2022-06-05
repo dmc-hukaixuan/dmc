@@ -18,6 +18,10 @@ func SystemTime() int64 {
 	return time.Now().Unix()
 }
 
+func NowSystemTime() time.Time {
+	return time.Now()
+}
+
 // returns a time stamp for a given system time in C<yyyy-mm-dd 23:59:59> format.
 //
 //

@@ -24,13 +24,13 @@ type TicketTemplateApi struct {
 // ticket template base
 func (p *TicketTemplateApi) Base(c *gin.Context) {
 	var sd request.SubActionData
-	userID := 1
+	user_id, _ := c.Get("userID")
 	_ = c.ShouldBindJSON(&sd)
 	fmt.Println("sd -------1111---:", sd)
 	if sd.SubAction == "edit" {
 		templateID, _ := sd.Data["templateID"].(string)
 		templateID1, _ := strconv.Atoi(templateID)
-		fmt.Println(" templateID", templateID, userID)
+		fmt.Println(" templateID", templateID, user_id.(int))
 		TicketTemplateEdit(templateID1, c)
 	} else if sd.SubAction == "save" {
 		var td model.TemplateData

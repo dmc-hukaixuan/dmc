@@ -11,25 +11,42 @@ import (
 )
 
 /*
- */
-func StateAdd() {
-
+ add a ticket state
+*/
+func StateAdd(ts model.TicketState) (stateID int, err error) {
+	err = global.GVA_DB.Table("ticket_state").Create(&ts).Error
+	if err != nil {
+		return
+	}
+	return ts.ID, err
 }
 
-func StateGet() {
-
+/*
+	ticket state detial info
+*/
+func StateGet(stateID int) (ts model.TicketState) {
+	err := global.GVA_DB.Table("ticket_state").Where("id = ?", stateID).First(&ts).Error
+	if err != nil {
+		return
+	}
+	return ts
 }
 
-func StateUpdate() {
-
+/*
+	update ticket state
+*/
+func StateUpdate(ts model.TicketState) (stateID int, err error) {
+	err = global.GVA_DB.Table("ticket_state").Where("id = ?", ts.ID).Model(&ts).Omit("create_by", "create_time").Updates(ts).Error
+	if err != nil {
+		return
+	}
+	return ts.ID, err
 }
 
 /*
 * get state list as a hash of ID, Name pairs
 
 useage
-
-
 
 returns
 
@@ -67,4 +84,38 @@ func StateList(validID int) map[string]string {
 
 func StateGetStatesByType() {
 
+}
+
+/*
+
+get state type list as a hash of ID, Name pairs
+
+    my %ListType = $StateObject->StateTypeList(
+        UserID => 123,
+    );
+
+returns
+
+    my %ListType = (
+        1 => "new",
+        2 => "open",
+        3 => "closed",
+        4 => "pending reminder",
+        5 => "pending auto",
+        6 => "removed",
+        7 => "merged",
+    );
+
+*/
+func StateTypeList() map[int]string {
+	var tp []model.TicketStateType
+	err := global.GVA_DB.Table("ticket_state_type").Scan(&tp).Error
+	stateTypeList := map[int]string{}
+	if err != nil {
+		return stateTypeList
+	}
+	for _, v := range tp {
+		stateTypeList[v.ID] = v.Name
+	}
+	return stateTypeList
 }

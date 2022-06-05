@@ -22,8 +22,8 @@ func (r *RoleApi) Rolebase(c *gin.Context) {
 	var sd request.SubActionData
 	_ = c.ShouldBindJSON(&sd)
 	fmt.Println("sd ", sd)
-	user_id := 1
 
+	user_id, _ := c.Get("userID")
 	// edit dynamic field
 	if sd.SubAction == "edit" {
 		roleID, _ := sd.Data["roleID"].(string)
@@ -33,7 +33,7 @@ func (r *RoleApi) Rolebase(c *gin.Context) {
 	} else if sd.SubAction == "save" {
 		var roleData model.Role
 		mapstructure.Decode(sd.Data, &roleData)
-		roleSave(roleData, user_id)
+		roleSave(roleData, user_id.(int))
 	} else {
 		roleList := user.RoleOverview()
 		response.SuccessWithDetailed(gin.H{

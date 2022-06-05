@@ -26,10 +26,21 @@ func Routers() *gin.Engine {
 	// 获取路由组件实例
 
 	group := router.Group("")
+	group.POST("/user/login", v1.APIGroupApp.Auth.AuthApi.Auth)
+
 	group.Use(middleware.JWTAuth())
 	{
+
+		group.GET("/user/admin/ticketType/:id", v1.APIGroupApp.Admin.TicketTypeAPI.TypeEdit)
+		group.PUT("/user/admin/ticketType", v1.APIGroupApp.Admin.TicketTypeAPI.TypeSave)
+		group.GET("/user/admin/ticketType/list", v1.APIGroupApp.Admin.TicketTypeAPI.TypeList)
+		group.GET("/user/admin/workingTime/list", v1.APIGroupApp.Admin.WorkingTimeApi.WorkingTimeList)
+		group.GET("/user/admin/workingTime", v1.APIGroupApp.Admin.WorkingTimeApi.WorkingTimebase)
+		group.GET("/user/admin/dynamicField", v1.APIGroupApp.Admin.DynamicFieldApi.DynmicFieldbase)
 		group.GET("/user/admin/ticketTemplate", v1.APIGroupApp.Admin.TicketTemplateApi.Base)
 		//group.GET("/user/login", system.Auth)
+		group.PUT("/user/admin/role/:id", v1.APIGroupApp.Admin.RoleApi.Rolebase)
+		group.GET("/user/admin/role", v1.APIGroupApp.Admin.RoleApi.Rolebase)
 		group.GET("/user/admin/processManagement", v1.APIGroupApp.Admin.ProcessManagementApi.ProcessOverview)
 		group.GET("/user/admin/processManagement/typeSave", v1.APIGroupApp.Admin.ProcessManagementApi.ProcessTypeSave)
 		group.GET("/user/admin/processManagement/edit", v1.APIGroupApp.Admin.ProcessManagementApi.ProcessManagement)
@@ -38,7 +49,6 @@ func Routers() *gin.Engine {
 		// group.GET("/user/:uuid", v1.GetUserDetails)
 	}
 	return router
-
 }
 
 func Cors() gin.HandlerFunc {

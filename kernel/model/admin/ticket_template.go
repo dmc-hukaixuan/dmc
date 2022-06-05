@@ -17,9 +17,9 @@ type TemplateData struct {
 	Roles           []int                   `json:"roles,omitempty"`
 	Createtime      string                  `json:"create_time,omitempty" gorm:"column:create_time;"`
 	Createby        int                     `json:"create_by,omitempty" gorm:"column:create_by;"`
-	CreatebyName    string                  `json:"create_by_name,omitempty" gorm:"-"`
+	CreatebyName    string                  `json:"create_by_name,omitempty" gorm:"<-:false"`
 	Changetime      string                  `json:"change_time,omitempty" gorm:"column:change_time;"`
-	ChangebyName    string                  `json:"change_by_name,omitempty" gorm:"-"`
+	ChangebyName    string                  `json:"change_by_name,omitempty" gorm:"<-:false"`
 	Changeby        int                     `json:"change_by,omitempty" gorm:"column:change_by;"`
 }
 

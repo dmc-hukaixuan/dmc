@@ -22,6 +22,7 @@ type DynamicFieldApi struct {
 func (df *DynamicFieldApi) DynmicFieldbase(c *gin.Context) {
 	var sd request.SubActionData
 	_ = c.ShouldBindJSON(&sd)
+
 	// edit dynamic field
 	if sd.SubAction == "edit" {
 		field_id, _ := sd.Data["field_id"].(string)
@@ -92,16 +93,18 @@ func DynamicFieldEdit(fieldKey int, c *gin.Context) {
 func DynamicFieldUpdate(df map[string]interface{}, c *gin.Context) {
 	var dfData model.DynamicField
 	mapstructure.Decode(df, &dfData)
+	user_id, _ := c.Get("userID")
+
 	config, _ := yaml.Marshal(df["config"])
 	if dfData.ID > 0 {
-		dfData.ChangeBy = 1
+		dfData.ChangeBy = user_id.(int)
 		dfData.ConfigT = string(config)
 		dfData.ChangeTime = time.Now().Format("2006-01-02 15:04:05")
 		admin.DynamicFieldUpdate(dfData)
 	} else {
 		dfData.CreateTime = time.Now().Format("2006-01-02 15:04:05")
-		dfData.CreateBy = 1
-		dfData.ChangeBy = 1
+		dfData.CreateBy = user_id.(int)
+		dfData.ChangeBy = user_id.(int)
 		dfData.ConfigT = string(config)
 		dfData.ChangeTime = time.Now().Format("2006-01-02 15:04:05")
 		admin.DynamicFieldAdd(dfData)

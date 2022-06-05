@@ -5,14 +5,14 @@ package user
 
 import (
 	"dmc/global"
-	model "dmc/kernel/model/ticket"
+	model "dmc/kernel/model/user"
 	"fmt"
 	"strconv"
 )
 
 func UserList(validID int) map[string]string {
-	var tp []model.TicketPriority
-	selectSQL := `SELECT id, name FROM users`
+	var tp []model.User
+	selectSQL := `SELECT id, full_name, job_number, login FROM users`
 	fmt.Print("validID", validID)
 	if validID > 0 {
 		selectSQL = fmt.Sprint(selectSQL, " WHERE valid_id = ", validID)
@@ -24,7 +24,7 @@ func UserList(validID int) map[string]string {
 	}
 
 	for _, v := range tp {
-		PriorityList[strconv.Itoa(v.ID)] = v.Name
+		PriorityList[strconv.Itoa(v.ID)] = v.FullName + " " + v.JobNumber + " " + v.Login
 	}
 	return PriorityList
 }

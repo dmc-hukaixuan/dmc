@@ -14,6 +14,7 @@ type Admin struct {
 	RoleApi
 	DynamicFieldApi
 	WorkingTimeApi
+	TicketTypeAPI
 }
 
 // check request is a json string

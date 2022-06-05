@@ -1,9 +1,13 @@
 package admin
 
 import (
-	"time"
-	//"gorm.io/gorm"
+	"database/sql/driver"
+	"encoding/json"
+	"errors"
+	"fmt"
 )
+
+//"gorm.io/gorm"
 
 type DynamicField struct {
 	ID            int                `json:"id,omitempty" gorm:"column:id;"`
@@ -12,12 +16,15 @@ type DynamicField struct {
 	Label         string             `json:"label,omitempty" gorm:"column:label;"`
 	FieldType     string             `json:"field_type,omitempty" gorm:"column:field_type;"`
 	ObjectType    string             `json:"object_type,omitempty" gorm:"column:object_type;"`
-	Config        DynamicFieldConfig `json:"config,omitempty" gorm:"column:config;"`
-	ValidID       uint               `json:"valid_id,omitempty" gorm:"column:valid_id;"`
-	CreateTime    *time.Time         `json:"createTime,omitempty" gorm:"column:create_time;autoCreateTime;"`
+	Config        DynamicFieldConfig `json:"config,omitempty" gorm:"<-:false"`
+	ConfigT       string             `json:"configt,omitempty" gorm:"column:config;"`
+	ValidID       uint               `json:"validid,omitempty" gorm:"column:valid_id;"`
+	CreateTime    string             `json:"createTime,omitempty" gorm:"column:create_time;"`
 	CreateBy      int                `json:"createBy,omitempty" gorm:"column:create_by;"`
-	ChangeTime    *time.Time         `json:"changeTime,omitempty" gorm:"column:change_time;autoCreateTime;"`
+	CreateByName  string             `json:"createByName,omitempty" gorm:"<-:false"`
+	ChangeTime    string             `json:"changeTime,omitempty" gorm:"column:change_time;"`
 	ChangeBy      int                `json:"changeBy,omitempty" gorm:"column:change_by;"`
+	ChangeByName  string             `json:"changeByName,omitempty" gorm:"<-:false"`
 }
 
 type DynamicFieldConfig struct {

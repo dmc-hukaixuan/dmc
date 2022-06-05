@@ -71,7 +71,7 @@ func workingTimeEdit(wt_id int, c *gin.Context) {
 func workingTimeSave(sd map[string]interface{}, c *gin.Context) {
 	var wtc model.WorkingTimeCalender
 	mapstructure.Decode(sd, &wtc)
-
+	user_id, _ := c.Get("userID")
 	workingTime := map[string]interface{}{
 		"extraWorkingDay": sd["extraWorkingDay"],
 		"vacationDays":    sd["vacationDays"],
@@ -85,14 +85,14 @@ func workingTimeSave(sd map[string]interface{}, c *gin.Context) {
 
 	fmt.Println("wtc.ID ", wtc.ID)
 	if wtc.ID > 0 {
-		wtc.ChangeBy = 1
+		wtc.ChangeBy = user_id.(int)
 		wtc.WorkingTime = string(config)
 		wtc.ChangeTime = time.Now().Format("2006-01-02 15:04:05")
 		service.WorkingTimeUpdate(wtc)
 	} else {
 		wtc.CreateTime = time.Now().Format("2006-01-02 15:04:05")
-		wtc.CreateBy = 1
-		wtc.ChangeBy = 1
+		wtc.CreateBy = user_id.(int)
+		wtc.ChangeBy = user_id.(int)
 		wtc.WorkingTime = string(config)
 		wtc.ChangeTime = time.Now().Format("2006-01-02 15:04:05")
 		service.WorkingTimeAdd(wtc)

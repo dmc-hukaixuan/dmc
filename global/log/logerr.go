@@ -11,16 +11,18 @@ import (
 type Field = zap.Field
 
 var (
-	Logger  *zap.Logger
-	String  = zap.String
-	Any     = zap.Any
-	Int     = zap.Int
-	Float32 = zap.Float32
+	Logger      *zap.Logger
+	SugarLogger *zap.SugaredLogger
+	String      = zap.String
+	Any         = zap.Any
+	Int         = zap.Int
+	Float32     = zap.Float32
 )
 
 // logpath 日志文件路径
 // loglevel 日志级别
 func InitLogger(logpath string, loglevel string) {
+
 	// 日志分割
 	hook := lumberjack.Logger{
 		Filename:   logpath, // 日志文件路径，默认 os.TempDir()
@@ -86,5 +88,8 @@ func InitLogger(logpath string, loglevel string) {
 	filed := zap.Fields(zap.String("application", "dmc"))
 	// 构造日志
 	Logger = zap.New(core, caller, development, filed)
+	logger2, _ := zap.NewProduction()
+	defer logger2.Sync()
+	SugarLogger = logger2.Sugar()
 	Logger.Info("Logger init success")
 }

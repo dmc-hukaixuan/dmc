@@ -25,16 +25,17 @@ func Test(c *gin.Context) {
 }
 
 // auth user
-func Auth(c *gin.Context) {
+func (a *AuthApi) Auth(c *gin.Context) {
 	fmt.Println("system auth : ")
 	var login_param login
-	name := c.Query("username")
-	password := c.Query("password")
-	login_param = login{
-		Username: name,
-		Password: password,
-	}
-	fmt.Println("login_param : ", login_param, " name ", name, password)
+	_ = c.ShouldBindJSON(&login_param)
+	// name := c.Query("username")
+	// password := c.Query("password")
+	// login_param = login{
+	// 	Username: name,
+	// 	Password: password,
+	// }
+	fmt.Println("login_param : ", login_param, " name ", login_param.Username, login_param.Password)
 	// if err := c.ShouldBindJSON(&login_param); err != nil {
 	// 	// 返回错误信息
 	// 	// gin.H封装了生成json数据的工具
@@ -42,14 +43,14 @@ func Auth(c *gin.Context) {
 	// 	return
 	// }
 	log.Logger.Debug("user", log.Any("user", login_param))
-	fmt.Println("login_param : ", login_param, " name ", name)
+
 	if login_param.Username == "" || login_param.Password == "" {
 		return
 	}
 	u := &user.LoginParam{Login: login_param.Username, PW: login_param.Password}
 	fmt.Println("login_param : ", login_param)
 	if err, user := auth.UserAuth(u); err != nil {
-		fmt.Println("auth error ")
+		response.FailWithMessage("user Or password wrong", c)
 	} else {
 		// create user seesion
 		tokenCreate(c, *user)
@@ -66,7 +67,9 @@ type LoginResponse struct {
 // 用户登陆以后返回 token
 func tokenCreate(c *gin.Context, user user.User) {
 	fmt.Println("User : ", c.Request.Header.Get("User-Agent"))
-	err, token := service.CreateSessionID(&user)
+	remoteAddr := c.ClientIP()
+	userAgent := c.Request.Header.Get("User-Agent")
+	token, err := service.CreateSessionID(&user, remoteAddr, userAgent)
 	if err != nil {
 		log.Logger.Error("Get seesion fail", log.Any("serverError", err))
 		response.FailWithMessage("Get seesion fail", c)

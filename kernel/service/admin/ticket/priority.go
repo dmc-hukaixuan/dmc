@@ -10,6 +10,11 @@ import (
 	"strconv"
 )
 
+/*
+	get ticket priority
+
+	return a map data stucture
+*/
 func PriorityList(validID int) map[string]string {
 	var tp []model.TicketPriority
 	selectSQL := `SELECT id, name FROM ticket_priority`
@@ -29,14 +34,50 @@ func PriorityList(validID int) map[string]string {
 	return PriorityList
 }
 
-func PriorityGet() {
-
+/*
+	get priority detail
+*/
+func PriorityGet(priorityID int) (tp model.TicketPriority) {
+	err := global.GVA_DB.Table("ticket_priority").Where("id = ?", priorityID).First(&tp).Error
+	if err != nil {
+		return
+	}
+	return tp
 }
 
-func PriorityAdd() {
-
+/* ticket priority */
+func PriorityAdd(tp model.TicketPriority) (prioritID int, err error) {
+	err = global.GVA_DB.Table("ticket_state").Create(&tp).Error
+	if err != nil {
+		return
+	}
+	return tp.ID, err
 }
 
-func PriorityUpdate() {
+/*
+  ticket priority id
+*/
+func PriorityUpdate(tp model.TicketPriority) (prioritID int, err error) {
+	err = global.GVA_DB.Table("ticket_priority").Where("id = ?", tp.ID).Model(&tp).Omit("create_by", "create_time").Updates(tp).Error
+	if err != nil {
+		return
+	}
+	return tp.ID, err
+}
 
+/*
+	Priority list get
+*/
+func PriorityListGet(validID int) (tp []model.TicketPriority) {
+	selectSQL := `SELECT tt.id, tt.name, tt.valid_id, tt.tnstart AS tnstart,
+					u.full_name AS create_by_name, u1.full_name AS change_by_name, 
+					tt.create_time AS create_time, tt.change_time AS change_time
+					FROM ticket_source tt 
+					LEFT JOIN users u ON u.id = tt.create_by 
+					LEFT JOIN users u1 ON u1.id = tt.change_by`
+	err := global.GVA_DB.Raw(selectSQL).Scan(&tp).Error
+	if err != nil {
+		fmt.Println("err", err)
+	}
+	return tp
 }
