@@ -87,9 +87,9 @@ func (t *TicketPriorityAPI) PrioritySave(c *gin.Context) {
 	response.Success(c)
 }
 
-func (t *TicketTypeAPI) PriorityList(c *gin.Context) {
-	roleList := service.PriorityListGet(0)
+func (t *TicketPriorityAPI) PriorityList(c *gin.Context) {
+	priorityList := service.PriorityListGet(0)
 	response.SuccessWithDetailed(gin.H{
-		"overviewList": &roleList,
+		"overviewList": &priorityList,
 	}, "获取成功", c)
 }

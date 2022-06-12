@@ -33,14 +33,33 @@ func ServiceList(validID int) map[string]string {
 	return slaList
 }
 
+// service overview list
+func ServiceListGet(service_id int) (ts []model.Service) {
+
+	selectSQL := `SELECT s.id AS id, s.name AS name, s.valid_id AS valid_id, s.internal_note AS internal_note,
+					s.external_note AS external_note,
+					u.full_name AS create_by_name, u1.full_name AS change_by_name, 
+					s.create_time AS create_time, s.change_time AS change_time
+					FROM service s 
+					LEFT JOIN users u ON u.id = s.create_by 
+					LEFT JOIN users u1 ON u1.id = s.change_by`
+	err := global.GVA_DB.Raw(selectSQL).Scan(&ts).Error
+	if err != nil {
+		panic(err)
+	}
+	return ts
+}
+
 /*
 	service get
 */
-func ServiceGet(service_id int) (ts model.TicketState) {
+func ServiceGet(service_id int) (ts model.Service) {
 	err := global.GVA_DB.Table("service").Where("id = ?", service_id).First(&ts).Error
 	if err != nil {
 		return
 	}
+	slaList := serviceLinkSLAGet(service_id)
+	ts.SLAList = slaList
 	return ts
 }
 
@@ -52,6 +71,8 @@ func ServiceAdd(service model.Service) (service_id int, err error) {
 	if err != nil {
 		return
 	}
+	// link sla to service
+	serviceLinkSLAAdd(service.ID, service.SLAList)
 	return service.ID, err
 }
 
@@ -60,6 +81,10 @@ func ServiceUpdate(service model.Service) (sla_id int, err error) {
 	if err != nil {
 		return
 	}
+	// delete service already link sla
+	serviceLinkSLADelete(service.ID)
+	// link sla to service
+	serviceLinkSLAAdd(service.ID, service.SLAList)
 	return service.ID, err
 }
 
@@ -111,3 +136,8 @@ func serviceLinkSLAGet(service_id int) (services []int) {
 	}
 	return services
 }
+
+// // service link tag
+// func serviceLinkTagGet(service_id int) (services []int) {
+// 	return []int
+// }

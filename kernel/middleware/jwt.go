@@ -12,11 +12,13 @@ import (
 
 func JWTAuth() gin.HandlerFunc {
 	return func(c *gin.Context) {
-
 		// 这里 jwt 鉴权取头部信息 x-token 登录时回返回token信息 这里前端需要把token存储到cookie或者本地localStorage中 不过需要跟后端协商过期时间 可以约定刷新令牌或者重新登录
-		token := c.Request.Header.Get("cookie")
+		token := c.Request.Header.Get("dmc-token")
+		remoteAddr := c.ClientIP()
+		remoteUserAgent := c.GetHeader("User-Agent")
 		sess, err := c.Cookie("serviceCoolToken")
-		fmt.Println("token ", token, sess, err)
+
+		fmt.Println("token ^^^^^^^^^^^^", token, sess, err)
 		if token == "" {
 			response.FailWithDetailed(gin.H{"reload": true}, "未登录或非法访问", c)
 			c.Abort()
@@ -27,9 +29,17 @@ func JWTAuth() gin.HandlerFunc {
 		// 	c.Abort()
 		// 	return
 		// }
+		// check session id
 
-		// 查看 token 是否合法
-		j, err := service.GetSessionIDData(sess)
+		j, Message, sessionData := service.CheckSessionID(token, remoteAddr, remoteUserAgent)
+		if j == 0 {
+			response.FailWithDetailed(gin.H{"reload": true}, Message, c)
+			c.Abort()
+			return
+		}
+		// get session data
+		// j, err := service.GetSessionIDData(sess)
+
 		//fmt.Println(" j --------------------: ", j, "err", err)
 		// j := utils.NewJWT()
 		// // parseToken 解析token包含的信息
@@ -67,8 +77,9 @@ func JWTAuth() gin.HandlerFunc {
 		// 		_ = jwtService.SetRedisJWT(newToken, newClaims.Username)
 		// 	}
 		// }
-		// c.Set("claims", claims)
-		c.Set("userID", j["UserID"])
+
+		c.Set("sessionData", sessionData)
+		c.Set("userID", sessionData.UserID)
 		c.Set("token", j)
 		//	fmt.Println("j ", j)
 		c.Next()

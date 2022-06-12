@@ -82,6 +82,24 @@ func StateList(validID int) map[string]string {
 	return stateList
 }
 
+/*
+	type list get
+*/
+func StateListGet(validID int) (tt []model.TicketState) {
+	selectSQL := `SELECT tt.id, tt.name, tt.valid_id, tst.name AS state_type, tt.comments AS comments,
+					u.full_name AS create_by_name, u1.full_name AS change_by_name, 
+					tt.create_time AS create_time, tt.change_time AS change_time
+					FROM ticket_state tt 
+					LEFT JOIN users u ON u.id = tt.create_by 
+					LEFT JOIN ticket_state_type  tst ON tst.id = tt.id
+					LEFT JOIN users u1 ON u1.id = tt.change_by`
+	err := global.GVA_DB.Raw(selectSQL).Scan(&tt).Error
+	if err != nil {
+		fmt.Println("err", err)
+	}
+	return tt
+}
+
 func StateGetStatesByType() {
 
 }

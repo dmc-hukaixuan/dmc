@@ -39,9 +39,10 @@ type TicketState struct {
 	Name         string `json:"name" gorm:"column:name;"`
 	ValidID      int    `json:"validID" gorm:"column:valid_id;"`
 	Color        string `json:"color" gorm:"column:color;"`
-	StateTypeID  int    `json:"typeID" gorm:"column:type_id;"`
+	StateTypeID  int    `json:"type_id" gorm:"column:type_id;"`
+	StateType    string `json:"state_type" gorm:"<-:false"`
 	Icon         string `json:"icon" gorm:"column:icon;"`
-	Comment      string `json:"comment" gorm:"column:comment;"`
+	Comment      string `json:"comments" gorm:"column:comments;"`
 	CreateTime   string `json:"createTime" gorm:"column:create_time;"`
 	CreateBy     int    `json:"createBy" gorm:"column:create_by;"`
 	CreateByName string `gorm:"<-:false" json:"create_by_name"`
@@ -80,6 +81,10 @@ type Service struct {
 	ID           int    `json:"id" gorm:"column:id;"`
 	Name         string `json:"name" gorm:"column:name;"`
 	ValidID      int    `json:"validID" gorm:"column:valid_id;"`
+	SLAList      []int  `json:"slalist" gorm:"-"`
+	TagList      []int  `json:"taglist" gorm:"-"`
+	InternalNote string `json:"internalNote" gorm:"column:internal_note;"`
+	ExternalNote string `json:"externalNote" gorm:"column:external_note;"`
 	Comment      string `json:"comment" gorm:"column:comment;"`
 	CreateTime   string `json:"createTime" gorm:"column:create_time;"`
 	CreateBy     int    `json:"createBy" gorm:"column:create_by;"`
@@ -90,16 +95,22 @@ type Service struct {
 }
 
 type SLA struct {
-	ID           int    `json:"id" gorm:"column:id;"`
-	Name         string `json:"name" gorm:"column:name;"`
-	ValidID      int    `json:"validID" gorm:"column:valid_id;"`
-	Comment      string `json:"comment" gorm:"column:comment;"`
-	CreateTime   string `json:"createTime" gorm:"column:create_time;"`
-	CreateBy     int    `json:"createBy" gorm:"column:create_by;"`
-	CreateByName string `gorm:"<-:false" json:"create_by_name"`
-	ChangeTime   string `json:"changeTime" gorm:"column:change_time;"`
-	ChangeBy     int    `json:"changeBy" gorm:"column:change_by;"`
-	ChangeByName string `gorm:"<-:false" json:"change_by_name,omitempty"`
+	ID              int    `json:"id" gorm:"column:id;"`
+	Name            string `json:"name" gorm:"column:name;"`
+	ValidID         int    `json:"validID" gorm:"column:valid_id;"`
+	CalendarName    int    `json:"calendar_name" gorm:"column:calendar_name;"`
+	ServiceList     []int  `json:"service_list" gorm:"-"`
+	TagList         []int  `json:"taglist" gorm:"-"`
+	InternalNote    string `json:"internalNote" gorm:"column:internal_note;"`
+	ExternalNote    string `json:"externalNote" gorm:"column:external_note;"`
+	IndicatorConfig string `json:"indicator_config" gorm:"column:indicator_config"`
+	Comment         string `json:"comment" gorm:"column:comment;"`
+	CreateTime      string `json:"createTime" gorm:"column:create_time;"`
+	CreateBy        int    `json:"createBy" gorm:"column:create_by;"`
+	CreateByName    string `gorm:"<-:false" json:"create_by_name"`
+	ChangeTime      string `json:"changeTime" gorm:"column:change_time;"`
+	ChangeBy        int    `json:"changeBy" gorm:"column:change_by;"`
+	ChangeByName    string `gorm:"<-:false" json:"change_by_name,omitempty"`
 }
 
 type SLAService struct {
@@ -140,6 +151,41 @@ type SLACalender struct {
 type District struct {
 	ID           int    `json:"id" gorm:"column:id;"`
 	Name         string `json:"name" gorm:"column:name;"`
+	ValidID      int    `json:"validID" gorm:"column:valid_id;"`
+	Comment      string `json:"comment" gorm:"column:comment;"`
+	CreateTime   string `json:"createTime" gorm:"column:create_time;"`
+	CreateBy     int    `json:"createBy" gorm:"column:create_by;"`
+	CreateByName string `gorm:"<-:false" json:"create_by_name"`
+	ChangeTime   string `json:"changeTime" gorm:"column:change_time;"`
+	ChangeBy     int    `json:"changeBy" gorm:"column:change_by;"`
+	ChangeByName string `gorm:"<-:false" json:"change_by_name,omitempty"`
+}
+
+type Deparment struct {
+	ID                 int    `json:"id" gorm:"column:id;"`
+	Name               string `json:"name" gorm:"column:name;"`
+	DeparmentUserList  []int  `json:"deparment_user_list" gorm:"-"`
+	Street             string `json:"street" gorm:"column:street;"`
+	Zip                string `json:"zip" gorm:"column:zip;"`
+	City               string `json:"city" gorm:"column:city;"`
+	Country            string `json:"country" gorm:"column:country;"`
+	ParentDepartmentID string `json:"parent_department_id" gorm:"column:parent_department_id;"`
+	DistrictID         int    `json:"district_id" gorm:"column:district_id;"`
+	Url                string `json:"url" gorm:"column:url;"`
+	ValidID            int    `json:"validID" gorm:"column:valid_id;"`
+	Comment            string `json:"comment" gorm:"column:comment;"`
+	CreateTime         string `json:"createTime" gorm:"column:create_time;"`
+	CreateBy           int    `json:"createBy" gorm:"column:create_by;"`
+	CreateByName       string `gorm:"<-:false" json:"create_by_name"`
+	ChangeTime         string `json:"changeTime" gorm:"column:change_time;"`
+	ChangeBy           int    `json:"changeBy" gorm:"column:change_by;"`
+	ChangeByName       string `gorm:"<-:false" json:"change_by_name,omitempty"`
+}
+
+type Tag struct {
+	ID           int    `json:"id" gorm:"column:id;"`
+	Name         string `json:"name" gorm:"column:name;"`
+	TagType      int    `json:"tag_type" gorm:"column:tag_type;"`
 	ValidID      int    `json:"validID" gorm:"column:valid_id;"`
 	Comment      string `json:"comment" gorm:"column:comment;"`
 	CreateTime   string `json:"createTime" gorm:"column:create_time;"`

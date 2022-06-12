@@ -63,6 +63,24 @@ func SLAUpdate(sla model.SLA) (sla_id int, err error) {
 }
 
 /*
+	type list getSLA
+*/
+func SLAListGet(validID int) (sla []model.SLA) {
+	selectSQL := `SELECT s.id AS id, s.name AS name, s.valid_id AS valid_id, s.internal_note AS internal_note,
+					s.external_note AS external_note,
+					u.full_name AS create_by_name, u1.full_name AS change_by_name, 
+					s.create_time AS create_time, s.change_time AS change_time
+					FROM sla s 
+					LEFT JOIN users u ON u.id = s.create_by 
+					LEFT JOIN users u1 ON u1.id = s.change_by`
+	err := global.GVA_DB.Raw(selectSQL).Scan(&sla).Error
+	if err != nil {
+		fmt.Println("err", err)
+	}
+	return sla
+}
+
+/*
 	@param: sla id int
 	@param: servcis list an int array
 	@description : link service and sla

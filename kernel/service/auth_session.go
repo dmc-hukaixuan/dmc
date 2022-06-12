@@ -1,50 +1,63 @@
 package service
 
 import (
+	"dmc/global/log"
 	"dmc/initialize/database"
+	"dmc/kernel/model/common/request"
 	"dmc/kernel/model/user"
 	"dmc/kernel/util"
+	dateTime "dmc/kernel/util/time"
+	"encoding/json"
 	"errors"
 	"fmt"
-	"strconv"
 	"time"
 )
 
-type session struct {
-	ID         int64  `json:"id" gorm:"column:id;comment:"`
-	SessionID  string `json:"session_id" gorm:"column:session_id;comment:"`
-	DataKey    string `json:"data_key" gorm:"column:data_key;comment:"`
-	DataValue  string `json:"data_value" gorm:"column:data_value;comment:"`
-	Serialized int    `json:"Serialized" gorm:"column:serialized;comment:"`
-}
-
 // 创建 seesion
-func CreateSessionID(user *user.User) (token string, err error) {
+func CreateSessionID(user *user.User, RemoteAddr string, RemoteUserAgent string) (token string, err error) {
 	// time now
-	n_time := time.Now()
-	n_time_unix := strconv.Itoa(int(n_time.Unix()))
-	n_time_stamp := n_time.Format("2006-01-02 15:04:09")
+	// n_time := dateTime.CurrentTimestamp()
+	// //n_time_unix := strconv.Itoa(int(n_time.Unix()))
+	// n_time_stamp := dateTime.CurrentTimestamp()
+
 	// get remote address and the http user agent
 
 	// create challenge token
 	challengeToken := util.GenerateRandomString(32)
 
+	userstr, _ := json.Marshal(user)
+
 	// create session id
 	sessionID := util.GenerateRandomString(32)
-	var session = []session{
-		{SessionID: sessionID, DataKey: "UserType", DataValue: "jinzhu3"},
-		{SessionID: sessionID, DataKey: "UserSessionStart", DataValue: n_time_unix},
-		{SessionID: sessionID, DataKey: "UserRemoteAddr", DataValue: "jinzhu3"},
-		{SessionID: sessionID, DataKey: "UserRemoteUserAgent", DataValue: "jinzhu3"},
-		{SessionID: sessionID, DataKey: "UserChallengeToken", DataValue: challengeToken},
-		{SessionID: sessionID, DataKey: "UserLastRequest", DataValue: n_time_unix},
-		{SessionID: sessionID, DataKey: "UserLastLogin", DataValue: n_time_unix},
-		{SessionID: sessionID, DataKey: "UserLastLoginTimestamp", DataValue: n_time_stamp},
-		{SessionID: sessionID, DataKey: "UserFullname", DataValue: user.Fullname},
-		{SessionID: sessionID, DataKey: "UserLogin", DataValue: user.Login},
+	session := request.Session{
+		UserID:          user.ID,
+		SessionID:       sessionID,
+		ChallengeToken:  challengeToken,
+		LoginTime:       time.Now(),
+		ExpiresTime:     time.Now(),
+		LastRequest:     time.Now(),
+		RemoteAddr:      RemoteAddr,
+		RemoteUserAgent: RemoteUserAgent,
+		DataKey:         "",
+		DataValue:       string(userstr),
+		Serialized:      1,
 	}
-	err = database.Gorm().Table("sessions").Create(&session).Error
+	fmt.Println("-----------: ", user.ID, user)
+	// var session = []session{
+	// 	{SessionID: sessionID, DataKey: "UserType", DataValue: "jinzhu3"},
+	// 	{SessionID: sessionID, DataKey: "UserSessionStart", DataValue: n_time_unix},
+	// 	{SessionID: sessionID, DataKey: "UserRemoteAddr", DataValue: "jinzhu3"},
+	// 	{SessionID: sessionID, DataKey: "UserRemoteUserAgent", DataValue: "jinzhu3"},
+	// 	{SessionID: sessionID, DataKey: "UserChallengeToken", DataValue: challengeToken},
+	// 	{SessionID: sessionID, DataKey: "UserLastRequest", DataValue: n_time_unix},
+	// 	{SessionID: sessionID, DataKey: "UserLastLogin", DataValue: n_time_unix},
+	// 	{SessionID: sessionID, DataKey: "UserLastLoginTimestamp", DataValue: n_time_stamp},
+	// 	{SessionID: sessionID, DataKey: "UserFullname", DataValue: user.FullName},
+	// 	{SessionID: sessionID, DataKey: "UserLogin", DataValue: user.Login},
+	// }
 
+	err = database.Gorm().Table("sessions").Create(&session).Error
+	fmt.Println("err", err)
 	return sessionID, err
 }
 
@@ -58,37 +71,62 @@ var (
 // 检查 session 是否过期，
 // 这里应该把 session 写入缓存中，
 //
-func CheckSessionID(tokenString string) (user1 *user.User, err error) {
-
-	sessionData, err := GetSessionIDData(tokenString)
-	// 没有获取到数据
-	if err != nil {
-		return user1, err
+func CheckSessionID(tokenString string, RemoteAddr string, RemoteUserAgent string) (user1 int, message string, sessionData request.Session) {
+	// get session data
+	sessionData = GetSessionIDData(tokenString)
+	fmt.Println("tokenString ********   ", tokenString)
+	// remote ip check
+	// $ConfigObject->Get('SessionCheckRemoteIP')
+	if sessionData.RemoteAddr != RemoteAddr {
+		log.SugarLogger.Infof("RemoteIP of %s (%s) is different from registered IP (%s). Invalidating session!  Disable config 'SessionCheckRemoteIP' if you don't want this!", tokenString, sessionData.RemoteAddr, RemoteAddr)
+		// delete session id if it isn't the same remote ip?
+		return
 	}
-	var userInfo user.User
-	time1, ok := sessionData["UserLastLoginTimestamp"]
-	if ok {
-		userInfo.Login = sessionData["UserLogin"]
-		fmt.Println("time1 :", time1)
-	} else {
-		userInfo.Login = sessionData["UserLogin"]
+	nowTime := dateTime.NowSystemTime()
 
+	MaxSessionIdleTime := 1000000
+	SessionIdleTime := time.Hour * time.Duration(MaxSessionIdleTime)
+	// check session idle time
+	if sessionData.LastRequest.Add(SessionIdleTime).Before(nowTime) {
+		message = "Session has timed out. Please log in again."
+
+		timeOut := nowTime.Sub(sessionData.LastRequest)
+		log.SugarLogger.Infof("SessionID (%s) idle timeout (%s)! Don't grant access!!!", tokenString, timeOut)
+		// delete session id if too old
+		// RemoveSessionID
+		// $Self->RemoveSessionID( SessionID => $Param{SessionID} );
+		return 0, message, sessionData
 	}
-	fmt.Println("time1 :", time1)
-	return &userInfo, err
+	// check session time
+	SessionMaxTime := 400000
+	//var Hour time.Duration
+	Hour := time.Hour * time.Duration(SessionMaxTime)
+	if sessionData.LoginTime.Add(Hour).Before(nowTime) {
+		message = "Session has timed out. Please log in again."
+		timeOut := nowTime.Sub(sessionData.LoginTime)
+		log.SugarLogger.Infof("SessionID (%s) idle timeout (%s)! Don't grant access!!!", tokenString, timeOut)
+		// delete session id if too old
+		// RemoveSessionID
+		// $Self->RemoveSessionID( SessionID => $Param{SessionID} );
+		return 0, message, sessionData
+	}
+
+	return 1, "", sessionData
 }
 
 // 获取 数据库中的 seesion 信息
-func GetSessionIDData(tokenString string) (sessionData map[string]string, err error) {
-	var session []session
+func GetSessionIDData(tokenString string) (sessionData request.Session) {
+
 	// ask database to session data
-	database.Gorm().Table("sessions").Where("session_id = ? ", tokenString).Find(&session)
-
-	datasession := make(map[string]string)
-	// do loop get detail session data info
-	for _, v := range session {
-		datasession[v.DataKey] = v.DataValue
+	err := database.Gorm().Table("sessions").Where("session_id = ? ", tokenString).Find(&sessionData).Error
+	if err != nil {
+		panic(err)
 	}
+	// datasession := make(map[string]string)
+	// // do loop get detail session data info
+	// for _, v := range session {
+	// 	datasession[v.DataKey] = v.DataValue
+	// }
 
-	return datasession, err
+	return sessionData
 }

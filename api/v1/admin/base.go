@@ -13,8 +13,13 @@ type Admin struct {
 	TicketTemplateApi
 	RoleApi
 	DynamicFieldApi
+	ServiceApi
+	SLAApi
 	WorkingTimeApi
 	TicketTypeAPI
+	TicketPriorityAPI
+	TicketStateAPI
+	DepartmentApi
 }
 
 // check request is a json string
