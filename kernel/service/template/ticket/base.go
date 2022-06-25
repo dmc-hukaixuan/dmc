@@ -1,21 +1,30 @@
 package ticket
 
 import (
-	model "dmc/kernel/model/ticket"
+	model "dmc/kernel/model/admin"
+	//model "dmc/kernel/model/ticket"
 )
 
 type TF interface {
-	TemplateEditRender() model.FeildData
+	TemplateEditRender(fieldtype string, FieldObject model.TemplateField) model.FieldData
 	SearchSQLGet()
 	EditFieldRender()
 	SearchFieldRender()
 }
 
-func TicketStartandField(fieldtype string) TF {
-	// 这里应该获取系统配置中的配置，实现工单单号的生成
+/*
+	interface
+	@params : fieldType
+	@return : each field type
 
+use method:
+
+*/
+func TicketStartandField(fieldtype string) TF {
 	switch fieldtype {
 	case "user":
+		return &OwnerBase{}
+	case "owner":
 		return &OwnerBase{}
 	case "priority":
 		return &Priority{}

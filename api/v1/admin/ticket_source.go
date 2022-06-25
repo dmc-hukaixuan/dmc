@@ -38,7 +38,7 @@ func (t *TicketTypeAPI) TicketSourcebase(c *gin.Context) {
 /*
  type edit
 */
-func (t *TicketSourceAPI) TypeEdit(c *gin.Context) {
+func (t *TicketSourceAPI) SourceEdit(c *gin.Context) {
 	type_id, _ := strconv.Atoi(c.Param("id"))
 	fmt.Println("type_id ", type_id)
 	var ticketsourceData model.TicketSource
@@ -50,7 +50,6 @@ func (t *TicketSourceAPI) TypeEdit(c *gin.Context) {
 	typeData := map[string]interface{}{
 		"id":      ticketsourceData.ID,
 		"name":    ticketsourceData.Name,
-		"tnstart": ticketsourceData.Icon,
 		"validID": ticketsourceData.ValidID,
 		"color":   ticketsourceData.Color,
 		"icon":    ticketsourceData.Icon,
@@ -104,7 +103,7 @@ func (t *TicketSourceAPI) TicketSourceSave(c *gin.Context) {
 	response.Success(c)
 }
 
-func (t *TicketSourceAPI) TicketSourceList(c *gin.Context) {
+func (t *TicketSourceAPI) TicketSourceOverview(c *gin.Context) {
 	roleList := service.SourceListGet(0)
 	response.SuccessWithDetailed(gin.H{
 		"overviewList": &roleList,

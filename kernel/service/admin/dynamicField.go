@@ -88,6 +88,21 @@ func DynamicFieldUpdate(df model.DynamicField) (district_id int, err error) {
 	return df.ID, err
 }
 
+// update Dynamic Field content into database
+func DynamicFieldNameList(fieldType string) (dfm map[string]model.DynamicField) {
+	var dfenter []model.DynamicField
+	selectSQL := `SELECT id, internal_field, name, label, field_type, object_type,
+				config, valid_id, create_time, create_by, change_time, change_by FROM dynamic_field WHERE object_type = ? AND valid_id = 1`
+	err := global.GVA_DB.Raw(selectSQL, fieldType).Scan(&dfenter).Error
+	if err != nil {
+		panic(err)
+	}
+	for _, v := range dfenter {
+		dfm[v.Name] = v
+	}
+	return dfm
+}
+
 //delete a Dynamic field entry. You need to make sure that all values are
 //deleted before calling this function, otherwise it will fail on DBMS which check
 //referential integrity.

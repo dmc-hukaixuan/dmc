@@ -1,7 +1,12 @@
 package template
 
+import model "dmc/kernel/model/admin"
+
+//model "dmc/kernel/model/ticket"
+
 type DynamicFieldObject interface {
-	TicketNumberBuild() string
+	TemplateEditRender(fieldLabel string, fieldName string, DynamicFieldConfig *model.DynamicFieldConfig, FieldObject model.TemplateField) model.FieldData
+	ValueSet(fieldID int, object string, objectID int, value string)
 }
 
 func DynamicField(field_type string) DynamicFieldObject {
@@ -14,13 +19,17 @@ func DynamicField(field_type string) DynamicFieldObject {
 	case "chackbose":
 		return &Checkbox{}
 	case "datetime":
-		return &BaseTime{}
+		return &BaseDate{}
 	case "date":
-		return &BaseTime{}
+		return &BaseDate{}
 	case "dropdown":
+		return &Dropdown{}
+	case "Dropdown":
 		return &Dropdown{}
 	case "radio":
 		return &Checkbox{}
+	case "Radio":
+		return &Radio{}
 	case "text":
 		return &Text{}
 	case "tree":
@@ -32,6 +41,6 @@ func DynamicField(field_type string) DynamicFieldObject {
 	// case "aliyun-oss":
 	// 	return &AliyunOSS{}
 	default:
-		return &Date{}
+		return &Text{}
 	}
 }
