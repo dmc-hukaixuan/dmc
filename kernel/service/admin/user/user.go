@@ -29,8 +29,9 @@ func UserList(validID int) map[string]string {
 	return PriorityList
 }
 
-func UserGet() {
+func UserGet(userID int) (userData model.User) {
 
+	return userData
 }
 
 func UserAdd() {

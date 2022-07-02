@@ -1,6 +1,7 @@
 package time
 
 import (
+	"strconv"
 	"time"
 )
 
@@ -16,6 +17,13 @@ func SystemTime() int64 {
 	// should be check system default time zone
 	// return system time according to the time zone in the system configuration
 	return time.Now().Unix()
+}
+
+func SystemTimeString() string {
+	// get user preference time zone
+	// should be check system default time zone
+	// return system time according to the time zone in the system configuration
+	return strconv.FormatInt(time.Now().Unix(), 10)
 }
 
 func NowSystemTime() time.Time {

@@ -61,3 +61,7 @@ func TicketynamicFieldValueGet(ticketid int64) map[string]string {
 func TicketHistoryAdd() {
 
 }
+
+func TicketGet(ticketID int64) {
+
+}

@@ -6,7 +6,7 @@ import model "dmc/kernel/model/admin"
 
 type DynamicFieldObject interface {
 	TemplateEditRender(fieldLabel string, fieldName string, DynamicFieldConfig *model.DynamicFieldConfig, FieldObject model.TemplateField) model.FieldData
-	ValueSet(fieldID int, object string, objectID int, value string)
+	ValueSet(fieldID int, object string, objectID int64, value interface{})
 }
 
 func DynamicField(field_type string) DynamicFieldObject {

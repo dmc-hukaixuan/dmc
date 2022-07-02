@@ -42,7 +42,7 @@ func (*Dropdown) TemplateEditRender(fieldLabel string, fieldName string, Dynamic
 	return fieldData
 }
 
-func (*Dropdown) ValueSet(fieldID int, object string, objectID int, value string) {
+func (*Dropdown) ValueSet(fieldID int, object string, objectID int64, value interface{}) {
 	values := []model_dynamicField.DynamicFieldValue{}
 	values = append(values, model_dynamicField.DynamicFieldValue{
 		FieldID:   fieldID,

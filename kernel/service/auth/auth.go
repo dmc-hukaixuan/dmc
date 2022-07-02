@@ -7,7 +7,12 @@ import (
 	"fmt"
 )
 
-//
+/*
+	@param
+	@param
+	@description
+	@return 
+*/
 func UserAuth(u *user.LoginParam) (err error, userEnter *user.User) {
 	var user user.User
 	// user password sha256 encryption

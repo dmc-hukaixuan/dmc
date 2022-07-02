@@ -39,12 +39,12 @@ func (*Checkbox) TemplateEditRender(fieldLabel string, fieldName string, Dynamic
 	return fieldData
 }
 
-func (*Checkbox) ValueSet(fieldID int, object string, objectID int, value string) {
+func (*Checkbox) ValueSet(fieldID int, object string, objectID int64, value interface{}) {
 	values := []model_dynamicField.DynamicFieldValue{}
 	values = append(values, model_dynamicField.DynamicFieldValue{
 		FieldID:   fieldID,
 		ObjectID:  objectID,
-		ValueDate: value,
+		ValueText: value,
 	})
 	service.ValueSet(fieldID, objectID, values)
 }

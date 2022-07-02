@@ -37,7 +37,7 @@ func (*RolePreference) TemplateEditRender(fieldLabel string, fieldName string, D
 	return fieldData
 }
 
-func (*RolePreference) ValueSet() {
+func (*RolePreference) ValueSet(fieldID int, object string, objectID int64, value interface{}) {
 
 }
 

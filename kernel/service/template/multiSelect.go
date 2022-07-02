@@ -42,7 +42,7 @@ func (*MultiSelect) TemplateEditRender(fieldLabel string, fieldName string, Dyna
 	return fieldData
 }
 
-func (*MultiSelect) ValueSet(fieldID int, object string, objectID int, value string) {
+func (*MultiSelect) ValueSet(fieldID int, object string, objectID int64, value interface{}) {
 	values := []model_dynamicField.DynamicFieldValue{}
 	values = append(values, model_dynamicField.DynamicFieldValue{
 		FieldID:   fieldID,

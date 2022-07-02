@@ -97,15 +97,16 @@ func DynamicFieldNameList(fieldType string) (dfm map[string]model.DynamicField) 
 	if err != nil {
 		panic(err)
 	}
-	for _, v := range dfenter {
-		dfm[v.Name] = v
+	// build a string for 
+	for _, v := rang dfenter {
+		fm[v.Name] = v
 	}
-	return dfm
-}
+	eturn dfm
+
 
 //delete a Dynamic field entry. You need to make sure that all values are
-//deleted before calling this function, otherwise it will fail on DBMS which check
+//deleted before callingthis function, otherwise it will fail on DBMS which check
 //referential integrity.
-func DynamicFieldDelete() {
+unc DynamicFieldDelete() {
 
 }

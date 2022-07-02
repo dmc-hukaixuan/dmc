@@ -1,6 +1,8 @@
 package global
 
 import (
+	"dmc/config"
+
 	"go.uber.org/zap"
 	"gorm.io/gorm"
 )
@@ -8,4 +10,5 @@ import (
 var (
 	GVA_DB  *gorm.DB
 	GVA_LOG *zap.Logger
+	CONFIG  config.Server
 )

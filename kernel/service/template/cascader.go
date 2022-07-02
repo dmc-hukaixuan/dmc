@@ -39,17 +39,18 @@ func (*Cascader) TemplateEditRender(fieldLabel string, fieldName string, Dynamic
 	return fieldData
 }
 
-func (*Cascader) ValueSet(fieldID int, object string, objectID int, value string) {
+func (*Cascader) ValueSet(fieldID int, object string, objectID int64, value interface{}) {
 	values := []model_dynamicField.DynamicFieldValue{}
 	values = append(values, model_dynamicField.DynamicFieldValue{
 		FieldID:   fieldID,
 		ObjectID:  objectID,
-		ValueDate: value,
+		ValueText: value,
 	})
+
 	service.ValueSet(fieldID, objectID, values)
 }
 
-func (*Cascader) ValueGet(fieldID string, object string, objectID int) {
+func (*Cascader) ValueGet(fieldID string, object string, objectID int64) {
 
 }
 

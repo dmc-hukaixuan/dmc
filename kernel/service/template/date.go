@@ -39,7 +39,7 @@ func (*BaseDate) TemplateEditRender(fieldLabel string, fieldName string, Dynamic
 	return fieldData
 }
 
-func (*BaseDate) ValueSet(fieldID int, object string, objectID int, value string) {
+func (*BaseDate) ValueSet(fieldID int, object string, objectID int64, value interface{}) {
 	values := []model_dynamicField.DynamicFieldValue{}
 	values = append(values, model_dynamicField.DynamicFieldValue{
 		FieldID:   fieldID,
