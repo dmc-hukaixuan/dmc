@@ -2,6 +2,7 @@ package ticket
 
 import (
 	model "dmc/kernel/model/admin"
+	"encoding/json"
 	//model "dmc/kernel/model/ticket"
 	user "dmc/kernel/service/admin/user"
 	//"encoding/json"
@@ -48,8 +49,29 @@ func (*Role) SearchSQLGet() {
 
 }
 
-func (*Role) EditFieldRender() {
-
+func (*Role) EditFieldRender(fieldType string, fieldObject model.TemplateField, value interface{}) model.FieldData {
+	var perference_data model.FieldData
+	roleList := user.RoleList(1)
+	json.Unmarshal([]byte(fieldObject.FieldPreference), &perference_data)
+	perference_data.Options = roleList
+	// fieldData = model.FieldData{
+	// 	Name:          "title",
+	// 	Default:       "",
+	// 	FieldType:     "text",
+	// 	Label:         fieldObject.FieldKey,
+	// 	Placeholder:   "",
+	// 	Display:       fieldObject.Display,
+	// 	Impacts:       []string{},
+	// 	DependsOn:     []string{},
+	// 	PromptCode:    2,
+	// 	PromptMessage: "",
+	// 	HintMessage:   "",
+	// 	HintType:      2,
+	// 	Width:         4,
+	// 	RegexError:    "",
+	// 	Regex:         "",
+	// }
+	return perference_data
 }
 
 func (*Role) EditFieldValueGet() {

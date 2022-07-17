@@ -62,6 +62,24 @@ type Role struct {
 	ChangeByName           string `gorm:"-" json:"change_by_name,omitempty"`
 }
 
+type UserRole struct {
+	ID           int    `gorm:"column:id;primary_key;AUTO_INCREMENT" json:"id"`
+	QueueID      int    `gorm:"column:queue_id;default:null" json:"queue_id"`
+	UserID       int    `gorm:"column:user_id;default:null" json:"user_id"`
+	CreateTime   string `gorm:"column:create_time;NOT NULL" json:"create_time"`
+	CreateBy     int    `gorm:"column:create_by;NOT NULL" json:"create_by"`
+	CreateByName string `gorm:"-" json:"create_by_name"`
+	ChangeTime   string `gorm:"column:change_time;NOT NULL" json:"change_time,omitempty"`
+	ChangeBy     int    `gorm:"column:change_by;NOT NULL" json:"change_by,omitempty"`
+	ChangeByName string `gorm:"-" json:"change_by_name,omitempty"`
+}
+
+type RoleTemplate struct {
+	ID         int `gorm:"column:id;primary_key;AUTO_INCREMENT" json:"id"`
+	TemplateID int `gorm:"column:template_id;NOT NULL" json:"template_id"`
+	RoleID     int `gorm:"column:role_id;NOT NULL" json:"role_id"`
+}
+
 func (m *Role) TableName() string {
 	return "`Role`"
 }

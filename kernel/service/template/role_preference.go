@@ -41,8 +41,9 @@ func (*RolePreference) ValueSet(fieldID int, object string, objectID int64, valu
 
 }
 
-func (*RolePreference) ValueGet() {
-
+func (*RolePreference) ValueGet(fieldID int, object string, objectID int64) interface{} {
+	value := []interface{}{}
+	return value
 }
 
 func (*RolePreference) SearchSQLGet() {

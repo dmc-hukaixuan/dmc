@@ -2,6 +2,7 @@ package ticket
 
 import (
 	model "dmc/kernel/model/admin"
+	"encoding/json"
 	//model "dmc/kernel/model/ticket"
 	"dmc/kernel/service/admin/ticket"
 	//"encoding/json"
@@ -52,8 +53,14 @@ func (*TicketType) SearchSQLGet() {
 
 }
 
-func (*TicketType) EditFieldRender() {
+func (*TicketType) EditFieldRender(fieldType string, fieldObject model.TemplateField, value interface{}) model.FieldData {
+	var perference_data model.FieldData
+	typelist := ticket.TypeList(1)
+	json.Unmarshal([]byte(fieldObject.FieldPreference), &perference_data)
+	perference_data.Options = typelist
 
+	// 排除或者可选某个选项
+	return perference_data
 }
 
 func (*TicketType) EditFieldValueGet() {

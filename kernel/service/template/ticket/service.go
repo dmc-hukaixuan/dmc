@@ -2,6 +2,8 @@ package ticket
 
 import (
 	model "dmc/kernel/model/admin"
+	"encoding/json"
+
 	//model "dmc/kernel/model/ticket"
 	"dmc/kernel/service/admin/ticket"
 	//"encoding/json"
@@ -48,8 +50,30 @@ func (*Service) SearchSQLGet() {
 
 }
 
-func (*Service) EditFieldRender() {
-
+func (*Service) EditFieldRender(fieldType string, fieldObject model.TemplateField, value interface{}) model.FieldData {
+	var perference_data model.FieldData
+	json.Unmarshal([]byte(fieldObject.FieldPreference), &perference_data)
+	serviceList := ticket.ServiceList(1)
+	perference_data.Options = serviceList
+	// fieldData := model.FieldData{
+	// 	Name:          "title",
+	// 	Default:       "",
+	// 	FieldType:     "text",
+	// 	Label:         fieldObject.FieldKey,
+	// 	Placeholder:   "",
+	// 	Options:       serviceList,
+	// 	Display:       fieldObject.Display,
+	// 	Impacts:       []string{},
+	// 	DependsOn:     []string{},
+	// 	PromptCode:    2,
+	// 	PromptMessage: "",
+	// 	HintMessage:   "",
+	// 	HintType:      2,
+	// 	Width:         4,
+	// 	RegexError:    "",
+	// 	Regex:         "",
+	// }
+	return perference_data
 }
 
 func (*Service) EditFieldValueGet() {

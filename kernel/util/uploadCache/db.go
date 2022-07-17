@@ -3,6 +3,8 @@ package uploadCache
 import (
 	"math/rand"
 	"time"
+
+	"github.com/gin-gonic/gin"
 )
 
 type DB struct{}
@@ -17,7 +19,7 @@ func (*DB) FormIDRemove(formid string) {
 
 }
 
-func (*DB) FormIDAddFile(formid string) {
+func (*DB) FormIDAddFile(context *gin.Context) {
 
 }
 

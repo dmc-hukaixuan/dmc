@@ -110,3 +110,24 @@ func NodeListByProcessID(processID int) (ProcessNodeEnter []admin.ProcessNode, e
 	}
 	return ProcessNodeEnter, err
 }
+
+// 创建节点的 id
+func TemplateNodeList() []admin.ActivityTemplate {
+	var activityTemplate []admin.ActivityTemplate
+	// templateids := strings.Join(templateID, ",")
+	sql := `SELECT ptt.process_id, ptt.node_id, ptt.ticket_template_id FROM dmc_pm_activity_ticket_template ptt
+			LEFT JOIN dmc_ticket_template tt ON tt.id = ptt.ticket_template_id WHERE tt.type = 'craete'`
+	err := global.GVA_DB.Raw(sql).Find(&activityTemplate).Error
+	if err != nil {
+		panic(err)
+	}
+	return activityTemplate
+}
+
+func NodeTransitionGet(Node string) (NodeTransition []admin.ProcessNode) {
+	err := global.GVA_DB.Table("dmc_pm_activity").Where("source_activity_id = ?", Node).Find(&NodeTransition).Error
+	if err != nil {
+		panic(err)
+	}
+	return NodeTransition
+}

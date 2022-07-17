@@ -48,8 +48,27 @@ func (*SLA) SearchSQLGet() {
 
 }
 
-func (*SLA) EditFieldRender() {
+func (*SLA) EditFieldRender(fieldType string, fieldObject model.TemplateField, value interface{}) model.FieldData {
+	var fieldData model.FieldData
 
+	fieldData = model.FieldData{
+		Name:          "title",
+		Default:       "",
+		FieldType:     "text",
+		Label:         fieldObject.FieldKey,
+		Placeholder:   "",
+		Display:       fieldObject.Display,
+		Impacts:       []string{},
+		DependsOn:     []string{},
+		PromptCode:    2,
+		PromptMessage: "",
+		HintMessage:   "",
+		HintType:      2,
+		Width:         4,
+		RegexError:    "",
+		Regex:         "",
+	}
+	return fieldData
 }
 
 func (*SLA) EditFieldValueGet() {

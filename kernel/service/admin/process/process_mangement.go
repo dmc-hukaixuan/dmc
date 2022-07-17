@@ -30,7 +30,9 @@ func ProcessTypeList() (list interface{}, total int64, err error) {
 type processList struct {
 	ID               int       `json:"id" gorm:"column:id;"`
 	Name             string    `json:"name" gorm:"column:name;"`
-	StateEntityID    string    `json:"state_entity_id" `
+	EntityID         string    `json:"entity_id" gorm:"column:entity_id;"`
+	FirstNodeId      string    `json:"firstNodeId" gorm:"column:first_node_id;"`
+	StateEntityID    int       `json:"state_entity_id" `
 	ProcessType      string    `json:"typename" gorm:"column:typename;"`
 	CreateTime       time.Time `json:"create_time"`
 	CreateByUserName string    `json:"create_by_name" gorm:"column:create_by_name;"`
@@ -39,7 +41,7 @@ type processList struct {
 }
 
 // get process list data
-func ProcessList() (list interface{}, total int64, err error) {
+func ProcessList() (list []processList, total int64, err error) {
 	var process []processList
 
 	// make a sql string
@@ -115,4 +117,20 @@ func ProcessUpdate(process *admin.Process) (processEnter admin.Process, err erro
 		return
 	}
 	return processEnter, err
+}
+
+func ProceeFirstNodeList() interface{} {
+	list, _, _ := ProcessList()
+	typeFllowProcess := map[string]map[string]interface{}{}
+	for _, v := range list {
+		if v.StateEntityID == 1 {
+			typeFllowProcess[v.ProcessType] = map[string]interface{}{
+				"processName":     v.Name,
+				"processEntityID": v.EntityID,
+				"processID":       v.ID,
+				"firstNodeID":     v.FirstNodeId,
+			}
+		}
+	}
+	return typeFllowProcess
 }

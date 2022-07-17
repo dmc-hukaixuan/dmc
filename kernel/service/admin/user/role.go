@@ -8,6 +8,7 @@ import (
 	model "dmc/kernel/model/user"
 	"fmt"
 	"strconv"
+	"strings"
 )
 
 func RoleList(validID int) map[string]string {
@@ -68,4 +69,26 @@ func RoleUpdate(roleData model.Role) (roleID int, err error) {
 		return
 	}
 	return roleData.ID, err
+}
+
+/*
+	get role link ticket template
+*/
+func RoleCreateTemplateList(roleID int, roles []string) []string {
+	var template []model.RoleTemplate
+	if roleID != 0 {
+		global.GVA_DB.Raw("dmc_ticket_template_role  role_id = ? ", roleID).Model(&template)
+	} else {
+		roleStr := strings.Join(roles, `,`)
+		sql := `SELECT tt.id, tt.name FROM dmc_ticket_template tt 
+					LEFT JOIN dmc_ticket_template_role ttr ON ttr.template_id = tt.id 
+				WHERE tt.type = 'create' 
+					  AND ( ttr.id = 0 OR ttr.id IN ( SELECT queue_user.queue_id FROM queue_user where queue_user.user_id = ?)`
+		global.GVA_DB.Table(sql, roleStr).Model(&template)
+	}
+	roleTemplate := []string{}
+	for _, v := range template {
+		roleTemplate = append(roleTemplate, fmt.Sprintf("%d", v.TemplateID))
+	}
+	return roleTemplate
 }

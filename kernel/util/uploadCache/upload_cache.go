@@ -1,12 +1,14 @@
 package uploadCache
 
+import "github.com/gin-gonic/gin"
+
 // OSS 对象存储接口
 // Author [SliverHorn](https://github.com/SliverHorn)
 // Author [ccfish86](https://github.com/ccfish86)
 type UploadCache interface {
 	FormIDCreate() string
 	FormIDRemove(formid string)
-	FormIDAddFile(formid string)
+	FormIDAddFile(context *gin.Context)
 	FormIDRemoveFile(formid string)
 	FormIDGetAllFilesData(formid string)
 	FormIDGetAllFilesMeta(formid string)

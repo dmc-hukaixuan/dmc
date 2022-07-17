@@ -10,26 +10,30 @@ import (
 	"strconv"
 	"strings"
 	"time"
+
+	"github.com/gin-gonic/gin"
 )
 
 type FS struct{}
 
 func (*FS) FormIDCreate() string {
-	end := string(rand.Intn(1241))
+	end := strconv.Itoa(rand.Intn(12341241))
 	rand.Seed(time.Now().UnixNano())
 	// return requested form id
-	return time.Now().GoString() + "." + string(rand.Intn(1234)) + "." + end
+	return strconv.FormatInt(time.Now().UnixMicro(), 10) + "." + end
 }
 
 func (*FS) FormIDRemove(formid string) {
 
 }
 
-func (*FS) FormIDAddFile(formid string) {
+func (*FS) FormIDAddFile(context *gin.Context) {
+	formid := context.PostForm("formid")
 	// check formid is valid
 	if !FormIDValidate(formid) {
-		log.Logger.Error("FormID already exists, Please refresh page.", log.Any("serverError", err.Error()))
+		log.Logger.Error("FormID already exists, Please refresh page.")
 	}
+
 	// create cache subdirectory if not exist
 	// Directory := global.CONFIG.Local.Path + '/' + formid
 	Directory := "/var/temp/web_upload_cache/" + formid

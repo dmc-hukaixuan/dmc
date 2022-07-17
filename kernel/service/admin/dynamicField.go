@@ -18,13 +18,13 @@ type DynamicField struct{}
 func DynamicFieldListGet() (dfenter []model.DynamicField, err error) {
 
 	// var df []model.DynamicField
-	selectSQL := `SELECT df.id AS id, df.internal_field AS internal_field , df.name AS name, df.label AS label, 
+	selectSQL := `SELECT df.id AS id, df.internal_field AS internal_field , df.name AS name, df.label AS label,
 					df.field_type AS field_type, df.object_type AS object_type,
-					df.valid_id AS valid_id, df.create_time AS create_time, 
-					df.create_by AS create_by, df.change_time AS change_time, df.change_by AS change_by, 
-					u.full_name AS create_by_name, u1.full_name AS change_by_name 
+					df.valid_id AS valid_id, df.create_time AS create_time,
+					df.create_by AS create_by, df.change_time AS change_time, df.change_by AS change_by,
+					u.full_name AS create_by_name, u1.full_name AS change_by_name
 					FROM dynamic_field df
-					LEFT JOIN users u ON u.id = df.create_by 
+					LEFT JOIN users u ON u.id = df.create_by
 					LEFT JOIN users u1 ON u1.id = df.change_by`
 	err = global.GVA_DB.Raw(selectSQL).Scan(&dfenter).Error
 	if err != nil {
@@ -89,24 +89,25 @@ func DynamicFieldUpdate(df model.DynamicField) (district_id int, err error) {
 }
 
 // update Dynamic Field content into database
-func DynamicFieldNameList(fieldType string) (dfm map[string]model.DynamicField) {
+func DynamicFieldNameList(fieldType string) map[string]model.DynamicField {
 	var dfenter []model.DynamicField
 	selectSQL := `SELECT id, internal_field, name, label, field_type, object_type,
 				config, valid_id, create_time, create_by, change_time, change_by FROM dynamic_field WHERE object_type = ? AND valid_id = 1`
 	err := global.GVA_DB.Raw(selectSQL, fieldType).Scan(&dfenter).Error
 	if err != nil {
-		panic(err)
+		//panic(err)
 	}
-	// build a string for 
-	for _, v := rang dfenter {
-		fm[v.Name] = v
+	dfm := map[string]model.DynamicField{}
+	// build a string for
+	for _, v := range dfenter {
+		dfm[v.Name] = v
 	}
-	eturn dfm
-
+	return dfm
+}
 
 //delete a Dynamic field entry. You need to make sure that all values are
-//deleted before callingthis function, otherwise it will fail on DBMS which check
+//deleted before calling this function, otherwise it will fail on DBMS which check
 //referential integrity.
-unc DynamicFieldDelete() {
+func DynamicFieldDelete() {
 
 }

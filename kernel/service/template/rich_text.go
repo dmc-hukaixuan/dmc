@@ -3,7 +3,7 @@ package template
 import (
 	model "dmc/kernel/model/admin"
 	model_dynamicField "dmc/kernel/model/dynamicField"
-	service "dmc/kernel/service/ticket"
+	service "dmc/kernel/service/ticket/dynamicField"
 	// model "dmc/kernel/model/ticket"
 	// "encoding/json"
 )
@@ -49,8 +49,9 @@ func (*Richtext) ValueSet(fieldID int, object string, objectID int64, value inte
 	service.ValueSet(fieldID, objectID, values)
 }
 
-func (*Richtext) ValueGet() {
-
+func (*Richtext) ValueGet(fieldID int, object string, objectID int64) interface{} {
+	values := service.ValueGet(fieldID, objectID)
+	return values[0].ValueText
 }
 
 func (*Richtext) SearchSQLGet() {

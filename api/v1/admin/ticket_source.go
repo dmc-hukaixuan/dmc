@@ -65,6 +65,7 @@ func (t *TicketSourceAPI) SourceEdit(c *gin.Context) {
 	ticket type add or update
 */
 func TicketSourceSave(typeData model.TicketType, userID int) {
+
 	if typeData.ID > 0 {
 		typeData.ChangeBy = userID
 		typeData.ChangeTime = time.Now().Format("2006-01-02 15:04:05")

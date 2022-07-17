@@ -40,3 +40,35 @@ type TicketBaseData struct {
 	ChangeTime        time.Time `json:"change_time" gorm:"autoUpdateTime;"`  // 工单的修改时间
 	ChangeBy          int       `json:"change_by" gorm:"comment:工单的修改人"`     // 工单的修改人
 }
+
+type TicketHistory struct {
+	ID            int64  `json:"id"`
+	HistoryTypeID int    `json:"history_type_id"`
+	Object        string `json:"object"`
+	TicketID      int64  `json:"ticket_id"`
+	StartValue    string `json:"start_value"`
+	LeaveValue    string `json:"leave_value"`
+	OwnerID       int    `json:"owner_id"`
+	QueueID       int    `json:"queue_id"`
+	WorkingTime   int    `json:"working_time"`
+	CalendarTime  int    `json:"calendar_time"`
+	ArticleID     int64  `json:"article_id"`
+	TemplateID    int    `json:"template_id"`
+	TemplateName  string `json:"template_name"`
+	Source        string `json:"source"`
+	CreateBy      int    `json:"create_by"`
+	CreateTime    string `json:"create_time"`
+}
+
+type TicketHistoryFieldData struct {
+	TicketID        int64
+	OwnerID         int
+	QueueID         int
+	ArticleID       int64
+	TemplateID      int
+	FieldOrder      []string
+	TemplateName    string
+	Source          string
+	TicketFiledList map[string]interface{}
+	UserID          int
+}

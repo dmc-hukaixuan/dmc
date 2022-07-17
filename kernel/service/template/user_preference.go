@@ -3,7 +3,7 @@ package template
 import (
 	model "dmc/kernel/model/admin"
 	model_dynamicField "dmc/kernel/model/dynamicField"
-	service "dmc/kernel/service/ticket"
+	service "dmc/kernel/service/ticket/dynamicField"
 	// model "dmc/kernel/model/ticket"
 	// "encoding/json"
 )
@@ -49,16 +49,36 @@ func (*UserPreference) ValueSet(fieldID int, object string, objectID int64, valu
 	service.ValueSet(fieldID, objectID, values)
 }
 
-func (*UserPreference) ValueGet() {
-
+func (*UserPreference) ValueGet(fieldID int, object string, objectID int64) interface{} {
+	values := service.ValueGet(fieldID, objectID)
+	return values[0].ValueText
 }
 
 func (*UserPreference) SearchSQLGet() {
 
 }
 
-func (*UserPreference) EditFieldRender() {
+func (*UserPreference) EditFieldRender(fieldLabel string, fieldName string, DynamicFieldConfig *model.DynamicFieldConfig, FieldObject model.TemplateField, value interface{}) model.FieldData {
+	var fieldData model.FieldData
 
+	fieldData = model.FieldData{
+		Name:          "title",
+		Default:       "",
+		FieldType:     "cascader",
+		Label:         FieldObject.FieldKey,
+		Placeholder:   "",
+		Display:       FieldObject.Display,
+		Impacts:       []string{},
+		DependsOn:     []string{},
+		PromptCode:    2,
+		PromptMessage: "",
+		HintMessage:   "",
+		HintType:      2,
+		Width:         24,
+		RegexError:    "",
+		Regex:         "",
+	}
+	return fieldData
 }
 
 func (*UserPreference) EditFieldValueGet() {

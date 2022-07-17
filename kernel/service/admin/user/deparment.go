@@ -46,7 +46,6 @@ func DepartmentAdd(department model.Deparment) (department_id int, err error) {
 func DepartmentUpdate(department model.Deparment) (district_id int, err error) {
 	fmt.Println("add department -----------", department)
 	err = global.GVA_DB.Table("dmc_department").Where("id = ?", department.ID).Model(&department).Omit("create_by", "create_time").Updates(department).Error
-	fmt.Println("add department -----------", err)
 	if err != nil {
 		panic(err)
 	}

@@ -1,12 +1,5 @@
 package admin
 
-import (
-	"database/sql/driver"
-	"encoding/json"
-	"errors"
-	"fmt"
-)
-
 //"gorm.io/gorm"
 
 type DynamicField struct {
@@ -46,33 +39,4 @@ type MyJson struct {
 	v interface{}
 }
 
-func (s MyJson) Value() (driver.Value, error) {
-	b, err := json.Marshal(s.v)
-	fmt.Println("s.v ---- ", s.v)
-	return string(b), err
-}
-
 // 将数据库中取出的数据，赋值给目标类型
-func (s *MyJson) Scan(v interface{}) error {
-	var err error
-	var data_ map[string]interface{}
-	var data []map[string]interface{}
-	fmt.Println(v, string(v.([]byte)))
-	switch vt := v.(type) {
-	case string:
-		err = json.Unmarshal([]byte(vt), &s.v)
-	case []byte:
-		if vt[0] == 91 {
-			err = json.Unmarshal(vt, &data)
-			*s = MyJson{data}
-			//s.v = data
-		} else {
-			err = json.Unmarshal(vt, &data_)
-			//s.v = data_
-			*s = MyJson{data_}
-		}
-	default:
-		return errors.New("myjson 转换错误")
-	}
-	return err
-}

@@ -226,3 +226,23 @@ type ProcessData struct {
 	Transition       map[string]Transition       `json:"transition"`
 	TransitionAction map[string]TransitionAction `json:"transitionAction"`
 }
+
+type TransitionCondition struct {
+	ConditionLinking string      `json:"conditionLinking"`
+	Conditions       []Condition `json:"condition"`
+}
+type Condition struct {
+	Condition string   `json:"condition"`
+	Fields    []Fields `json:"fields"`
+}
+type Fields struct {
+	FieldName  string      `json:"fieldName"`
+	Compare    string      `json:"compare"`
+	FieldValue interface{} `json:"fieldValue"`
+	FieldType  string      `json:"fieldType"`
+}
+
+type TransitionActionData struct {
+	Module  string                 `json:"module"`
+	Configs map[string]interface{} `json:"config"`
+}

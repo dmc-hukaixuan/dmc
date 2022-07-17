@@ -5,6 +5,7 @@ package user
 
 import (
 	"dmc/global"
+	model_template "dmc/kernel/model/ticket"
 	model "dmc/kernel/model/user"
 	"fmt"
 	"strconv"
@@ -40,4 +41,34 @@ func UserAdd() {
 
 func UserUpdate() {
 
+}
+
+// get user role lsit
+func UserRoleList(userID int) (roles []int) {
+	var userRole []model.UserRole
+	selectSQL := `SELECT id, queue_id, user_id FROM queue_user`
+	err := global.GVA_DB.Raw(selectSQL, userID).Scan(&userRole).Error
+	if err != nil {
+		panic(err)
+	}
+	for _, v := range userRole {
+		roles = append(roles, v.QueueID)
+	}
+	return roles
+}
+
+func UserCreateTemplateList(userID int) map[int]model_template.TemplateData {
+	var template []model_template.TemplateData
+	sql := `SELECT tt.id, tt.name FROM dmc_ticket_template tt
+				LEFT JOIN dmc_ticket_template_role ttr ON ttr.template_id = tt.id
+			WHERE tt.type = 'create'
+					AND ( ttr.role_id = 0 OR ttr.role_id IN ( SELECT queue_user.queue_id FROM queue_user where queue_user.user_id = ?))`
+	global.GVA_DB.Raw(sql, userID).Model(&template)
+
+	templateList := map[int]model_template.TemplateData{}
+	//
+	for _, v := range template {
+		templateList[v.ID] = v
+	}
+	return templateList
 }
