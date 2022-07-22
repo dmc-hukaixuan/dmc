@@ -7,13 +7,15 @@ import (
 	"gorm.io/gorm"
 )
 
-func Gorm() *gorm.DB {
+func Gorm(dbtype string) *gorm.DB {
 	fmt.Println("dbtype :", database.GetConfig().DbType)
-	switch database.GetConfig().DbType {
+	switch dbtype {
 	case "mysql":
 		return GormMysql()
 	case "pgsql":
 		return GormPgSql()
+	case "mysqlReport":
+		return GormMysqlReport()
 	default:
 		return GormMysql()
 	}

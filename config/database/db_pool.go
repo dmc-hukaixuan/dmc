@@ -21,14 +21,34 @@ type LogConfig struct {
 	Path  string
 	Level string
 }
+type EmailConfig struct {
+	Host     string
+	User     string
+	Port     int
+	Token    string
+	Password string
+	From     string
+	Subject  string
+}
+
+type MySQLReportConfig struct {
+	Host     string
+	DataBase string
+	Password string
+	Port     int
+	User     string
+	Dbname   string
+}
 
 type ConfigObject struct {
 	DbType string
 	// gorm
-	Log     LogConfig
-	SysInfo SystemInfo
-	MySQL   Mysql `mapstructure:"mysql" json:"mysql" yaml:"mysql"`
-	PgSQL   Pgsql `mapstructure:"pgsql" json:"pgsql" yaml:"pgsql"`
+	Log         LogConfig
+	SysInfo     SystemInfo
+	Email       EmailConfig
+	MySQLReport MySQLReportConfig
+	MySQL       Mysql `mapstructure:"mysql" json:"mysql" yaml:"mysql"`
+	PgSQL       Pgsql `mapstructure:"pgsql" json:"pgsql" yaml:"pgsql"`
 }
 
 var c ConfigObject

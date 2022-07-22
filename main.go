@@ -21,7 +21,8 @@ func main() {
 
 	router := initialize.Routers()
 	address := fmt.Sprintf(":%d", config.GetConfig().SysInfo.Port)
-	global.GVA_DB = db.Gorm()
+	global.GVA_DB = db.Gorm("")
+	global.GVA_DB_REPORT = db.Gorm("mysqlReport")
 	fmt.Println("address *---------------", address)
 	s := &http.Server{
 		Addr:           ":8503",

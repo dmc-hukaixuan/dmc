@@ -8,7 +8,8 @@ import (
 )
 
 var (
-	GVA_DB  *gorm.DB
-	GVA_LOG *zap.Logger
-	CONFIG  config.Server
+	GVA_DB        *gorm.DB
+	GVA_DB_REPORT *gorm.DB
+	GVA_LOG       *zap.Logger
+	CONFIG        config.Server
 )
