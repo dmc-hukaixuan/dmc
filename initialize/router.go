@@ -31,8 +31,9 @@ func Routers() *gin.Engine {
     group.Use(middleware.JWTAuth())
     {
 
-        group.GET("/user/ticket/create/templateget/:id", v1.APIGroupApp.Ticket.TicketTemplateGet)
+        group.POST("/user/stats/:id", v1.APIGroupApp.Stats.StatsRun)
 
+        group.GET("/user/ticket/create/templateget/:id", v1.APIGroupApp.Ticket.TicketTemplateGet)
         group.GET("/user/admin/source/add", v1.APIGroupApp.Admin.TicketSourceAPI.SourceEdit)
         group.POST("/user/admin/source/add", v1.APIGroupApp.Admin.TicketSourceAPI.TicketSourceSave)
         group.GET("/user/admin/source/:id", v1.APIGroupApp.Admin.TicketSourceAPI.SourceEdit)

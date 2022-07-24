@@ -1,7 +1,7 @@
 package auth
 
 import (
-	"dmc/initialize/database"
+	"dmc/global"
 	"dmc/kernel/model/user"
 	"dmc/kernel/util"
 	"fmt"
@@ -11,7 +11,7 @@ import (
 	@param
 	@param
 	@description
-	@return 
+	@return
 */
 func UserAuth(u *user.LoginParam) (err error, userEnter *user.User) {
 	var user user.User
@@ -19,7 +19,7 @@ func UserAuth(u *user.LoginParam) (err error, userEnter *user.User) {
 	u.PW = util.SHA2(u.PW)
 	// .Preload("Authorities").Preload("Authority")
 	// preload can be find users role, this is
-	err = database.Gorm().Table("users").Where("login = ? AND pw = ?", u.Login, u.PW).First(&user).Error
+	err = global.GVA_DB.Table("users").Where("login = ? AND pw = ?", u.Login, u.PW).First(&user).Error
 	fmt.Println("user", userEnter, " err:", err)
 	return err, &user
 }

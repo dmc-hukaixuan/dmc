@@ -1,14 +1,16 @@
 package cronmodule
 
-type CornModule struct {
-	Run(taskID int, taskData string)
+type CornModule interface {
+    Run(taskID int, taskData string)
 }
 
 func CornRun(CornType string) CornModule {
-	switch CornType {
-	case "auto_report":
+    switch CornType {
+    case "auto_report":
         return &Report{}
-	case "cacheDelete":
-        return &Cascader{}
-	}
+    case "cacheDelete":
+        return &Report{}
+    default:
+        return &Report{}
+    }
 }
