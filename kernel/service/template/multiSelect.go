@@ -93,8 +93,18 @@ func (*MultiSelect) EditFieldValueGet() {
 
 }
 
-func (*MultiSelect) SearchFieldRender() {
-
+func (*MultiSelect) SearchFieldRender(fieldLabel string, fieldName string, DynamicFieldConfig *model.DynamicFieldConfig) model.FieldData {
+	fieldData := model.FieldData{
+		Name:        fieldName,
+		Default:     "",
+		FieldType:   "dropdown",
+		Label:       fieldLabel,
+		Options:     DynamicFieldConfig.PossibleValues,
+		Placeholder: "",
+		Display:     1,
+		Multiple:    1,
+	}
+	return fieldData
 }
 
 func (*MultiSelect) StatsFieldParameterBuild() {

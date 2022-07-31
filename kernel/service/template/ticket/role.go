@@ -78,8 +78,18 @@ func (*Role) EditFieldValueGet() {
 
 }
 
-func (*Role) SearchFieldRender() {
-
+func (*Role) SearchFieldRender() model.FieldData {
+	roleList := user.RoleList(1)
+	fieldData := model.FieldData{
+		Name:        "Role",
+		Default:     "",
+		FieldType:   "dropdown",
+		Label:       "role",
+		Placeholder: "",
+		Options:     roleList,
+		Display:     1,
+	}
+	return fieldData
 }
 
 func (*Role) StatsFieldParameterBuild() {

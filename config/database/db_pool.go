@@ -35,7 +35,7 @@ type MySQLReportConfig struct {
 	Host     string
 	DataBase string
 	Password string
-	Port     int
+	Port     string
 	User     string
 	Dbname   string
 }

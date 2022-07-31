@@ -1,9 +1,10 @@
 package ticket
 
-func SearchProfileList() {
-
+func SearchProfileList(userID int) map[string]string {
+    profileList := map[string]string{}
+    return profileList
 }
 
-func SeachProfileGet() {
+func SeachProfileGet(profileID int) {
 
 }

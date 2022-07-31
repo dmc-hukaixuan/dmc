@@ -88,8 +88,18 @@ func (*Dropdown) EditFieldValueGet() {
 
 }
 
-func (*Dropdown) SearchFieldRender() {
-
+func (*Dropdown) SearchFieldRender(fieldLabel string, fieldName string, DynamicFieldConfig *model.DynamicFieldConfig) model.FieldData {
+    fieldData := model.FieldData{
+        Name:        fieldName,
+        Default:     "",
+        FieldType:   "dropdown",
+        Label:       fieldLabel,
+        Options:     DynamicFieldConfig.PossibleValues,
+        Placeholder: "",
+        Display:     1,
+        Multiple:    1,
+    }
+    return fieldData
 }
 
 func (*Dropdown) StatsFieldParameterBuild() {

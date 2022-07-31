@@ -86,8 +86,17 @@ func (*Cascader) EditFieldValueGet() {
 
 }
 
-func (*Cascader) SearchFieldRender() {
-
+func (*Cascader) SearchFieldRender(fieldLabel string, fieldName string, DynamicFieldConfig *model.DynamicFieldConfig) model.FieldData {
+	fieldData := model.FieldData{
+		Name:        fieldName,
+		Default:     "",
+		FieldType:   "cascader",
+		Label:       fieldLabel,
+		Options:     DynamicFieldConfig.PossibleValues,
+		Placeholder: "",
+		Display:     1,
+	}
+	return fieldData
 }
 
 func (*Cascader) StatsFieldParameterBuild() {

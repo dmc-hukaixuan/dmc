@@ -62,8 +62,16 @@ func (*Title) EditFieldValueGet() {
 
 }
 
-func (*Title) SearchFieldRender() {
-
+func (*Title) SearchFieldRender() model.FieldData {
+	fieldData := model.FieldData{
+		Name:        "title",
+		Default:     "",
+		FieldType:   "text",
+		Label:       "Title",
+		Placeholder: "",
+		Display:     1,
+	}
+	return fieldData
 }
 
 func (*Title) StatsFieldParameterBuild() {

@@ -91,8 +91,16 @@ func (*BaseDate) EditFieldValueGet() {
 
 }
 
-func (*BaseDate) SearchFieldRender() {
-
+func (*BaseDate) SearchFieldRender(fieldLabel string, fieldName string, DynamicFieldConfig *model.DynamicFieldConfig) model.FieldData {
+	fieldData := model.FieldData{
+		Name:        fieldName,
+		Default:     "",
+		FieldType:   "date",
+		Label:       fieldLabel,
+		Placeholder: "",
+		Display:     1,
+	}
+	return fieldData
 }
 
 func (*BaseDate) StatsFieldParameterBuild() {

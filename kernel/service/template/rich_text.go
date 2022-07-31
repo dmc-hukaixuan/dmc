@@ -58,16 +58,43 @@ func (*Richtext) SearchSQLGet() {
 
 }
 
-func (*Richtext) EditFieldRender() {
+func (*Richtext) EditFieldRender(fieldLabel string, fieldName string, DynamicFieldConfig *model.DynamicFieldConfig, FieldObject model.TemplateField, value interface{}) model.FieldData {
+	var fieldData model.FieldData
 
+	fieldData = model.FieldData{
+		Name:          "title",
+		Default:       "",
+		FieldType:     "cascader",
+		Label:         FieldObject.FieldKey,
+		Placeholder:   "",
+		Display:       FieldObject.Display,
+		Impacts:       []string{},
+		DependsOn:     []string{},
+		PromptCode:    2,
+		PromptMessage: "",
+		HintMessage:   "",
+		HintType:      2,
+		Width:         24,
+		RegexError:    "",
+		Regex:         "",
+	}
+	return fieldData
 }
 
 func (*Richtext) EditFieldValueGet() {
 
 }
 
-func (*Richtext) SearchFieldRender() {
-
+func (*Richtext) SearchFieldRender(fieldLabel string, fieldName string, DynamicFieldConfig *model.DynamicFieldConfig) model.FieldData {
+	fieldData := model.FieldData{
+		Name:        fieldName,
+		Default:     "",
+		FieldType:   "text",
+		Label:       fieldLabel,
+		Placeholder: "",
+		Display:     1,
+	}
+	return fieldData
 }
 
 func (*Richtext) StatsFieldParameterBuild() {

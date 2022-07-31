@@ -85,8 +85,18 @@ func (*Checkbox) EditFieldValueGet() {
 
 }
 
-func (*Checkbox) SearchFieldRender() {
-
+func (*Checkbox) SearchFieldRender(fieldLabel string, fieldName string, DynamicFieldConfig *model.DynamicFieldConfig) model.FieldData {
+    fieldData := model.FieldData{
+        Name:        fieldName,
+        Default:     "",
+        FieldType:   "checkbox",
+        Label:       fieldLabel,
+        Options:     DynamicFieldConfig.PossibleValues,
+        Placeholder: "",
+        Display:     1,
+        Multiple: 1,
+    }
+    return fieldData
 }
 
 func (*Checkbox) StatsFieldParameterBuild() {

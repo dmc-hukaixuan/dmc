@@ -32,6 +32,7 @@ func Routers() *gin.Engine {
     {
 
         group.POST("/user/stats/:id", v1.APIGroupApp.Stats.StatsRun)
+        group.GET("/api/v1/stats", v1.APIGroupApp.Stats.StatsList)
 
         group.GET("/user/ticket/create/templateget/:id", v1.APIGroupApp.Ticket.TicketTemplateGet)
         group.GET("/user/admin/source/add", v1.APIGroupApp.Admin.TicketSourceAPI.SourceEdit)

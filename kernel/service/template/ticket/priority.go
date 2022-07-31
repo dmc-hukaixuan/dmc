@@ -65,8 +65,18 @@ func (*Priority) EditFieldValueGet() {
 
 }
 
-func (*Priority) SearchFieldRender() {
-
+func (*Priority) SearchFieldRender() model.FieldData {
+    priorityList := ticket.PriorityList(1)
+    fieldData := model.FieldData{
+        Name:        "priority",
+        Default:     "",
+        FieldType:   "dropdown",
+        Label:       "Priority",
+        Placeholder: "",
+        Options:     priorityList,
+        Display:     1,
+    }
+    return fieldData
 }
 
 func (*Priority) StatsFieldParameterBuild() {

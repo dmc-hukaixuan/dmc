@@ -85,8 +85,16 @@ func (*Attachment) EditFieldValueGet() {
 
 }
 
-func (*Attachment) SearchFieldRender() {
-
+func (*Attachment) SearchFieldRender(fieldLabel string, fieldName string, DynamicFieldConfig *model.DynamicFieldConfig) model.FieldData {
+    fieldData := model.FieldData{
+        Name:        fieldName,
+        Default:     "",
+        FieldType:   "text",
+        Label:       fieldLabel,
+        Placeholder: "",
+        Display:     1,
+    }
+    return fieldData
 }
 
 func (*Attachment) StatsFieldParameterBuild() {

@@ -75,8 +75,18 @@ func (*SLA) EditFieldValueGet() {
 
 }
 
-func (*SLA) SearchFieldRender() {
-
+func (*SLA) SearchFieldRender() model.FieldData {
+	slaList := ticket.SLAList(0)
+	fieldData := model.FieldData{
+		Name:        "service",
+		Default:     "",
+		FieldType:   "Tree",
+		Label:       "Service",
+		Placeholder: "",
+		Options:     slaList,
+		Display:     1,
+	}
+	return fieldData
 }
 
 func (*SLA) StatsFieldParameterBuild() {

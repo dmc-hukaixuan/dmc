@@ -80,8 +80,18 @@ func (*Service) EditFieldValueGet() {
 
 }
 
-func (*Service) SearchFieldRender() {
-
+func (*Service) SearchFieldRender() model.FieldData {
+	serviceList := ticket.ServiceList(1)
+    fieldData := model.FieldData{
+        Name:        "service",
+        Default:     "",
+        FieldType:   "Tree",
+        Label:       "Service",
+        Placeholder: "",
+        Options:     serviceList,
+        Display:     1,
+    }
+    return fieldData
 }
 
 func (*Service) StatsFieldParameterBuild() {

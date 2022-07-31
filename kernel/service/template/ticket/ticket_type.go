@@ -67,8 +67,18 @@ func (*TicketType) EditFieldValueGet() {
 
 }
 
-func (*TicketType) SearchFieldRender() {
-
+func (*TicketType) SearchFieldRender() model.FieldData {
+	typelist := ticket.TypeList(1)
+	fieldData := model.FieldData{
+		Name:        "type",
+		Default:     "",
+		FieldType:   "dropdown",
+		Label:       "Type",
+		Placeholder: "",
+		Options:     typelist,
+		Display:     1,
+	}
+	return fieldData
 }
 
 func (*TicketType) StatsFieldParameterBuild() {

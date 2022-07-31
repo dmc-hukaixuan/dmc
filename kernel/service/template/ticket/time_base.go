@@ -76,8 +76,16 @@ func (*TimeBase) EditFieldValueGet() {
 
 }
 
-func (*TimeBase) SearchFieldRender() {
-
+func (*TimeBase) SearchFieldRender() model.FieldData {
+	fieldData := model.FieldData{
+		Name:        "source_id",
+		Default:     "",
+		FieldType:   "dropdown",
+		Label:       "Source",
+		Placeholder: "",
+		Display:     1,
+	}
+	return fieldData
 }
 
 func (*TimeBase) StatsFieldParameterBuild() {

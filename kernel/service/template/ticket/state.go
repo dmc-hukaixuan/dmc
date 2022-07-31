@@ -52,37 +52,52 @@ func (*TicketState) SearchSQLGet() {
 }
 
 func (*TicketState) EditFieldRender(fieldType string, fieldObject model.TemplateField, value interface{}) model.FieldData {
-	var fieldData1 model.FieldData
-	statelist := ticket.StateList(1)
-	json.Unmarshal([]byte(fieldObject.FieldPreference), &fieldData1)
-	fmt.Println("FieldPreference ------------------ ", fieldData1, fieldObject.FieldPreference)
-	fieldData := model.FieldData{
-		Name:          "title",
-		Default:       "",
-		FieldType:     "text",
-		Label:         fieldObject.FieldKey,
-		Placeholder:   "",
-		Options:       statelist,
-		Display:       fieldObject.Display,
-		Impacts:       []string{},
-		DependsOn:     []string{},
-		PromptCode:    2,
-		PromptMessage: "",
-		HintMessage:   "",
-		HintType:      2,
-		Width:         4,
-		RegexError:    "",
-		Regex:         "",
-	}
-	return fieldData
+    var fieldData1 model.FieldData
+    statelist := ticket.StateList(1)
+    json.Unmarshal([]byte(fieldObject.FieldPreference), &fieldData1)
+    fmt.Println("FieldPreference ------------------ ", fieldData1, fieldObject.FieldPreference)
+
+    for _, v := range fieldData1.OptionsList {
+        fmt.Println("v", v)
+    }
+
+    fieldData := model.FieldData{
+        Name:          "title",
+        Default:       "",
+        FieldType:     "text",
+        Label:         fieldObject.FieldKey,
+        Placeholder:   "",
+        Options:       statelist,
+        Display:       fieldObject.Display,
+        Impacts:       []string{},
+        DependsOn:     []string{},
+        PromptCode:    2,
+        PromptMessage: "",
+        HintMessage:   "",
+        HintType:      2,
+        Width:         4,
+        RegexError:    "",
+        Regex:         "",
+    }
+    return fieldData
 }
 
 func (*TicketState) EditFieldValueGet() {
 
 }
 
-func (*TicketState) SearchFieldRender() {
-
+func (*TicketState) SearchFieldRender() model.FieldData {
+    statelist := ticket.StateList(1)
+    fieldData := model.FieldData{
+        Name:        "state",
+        Default:     "",
+        FieldType:   "dropdown",
+        Label:       "State",
+        Placeholder: "",
+        Options:     statelist,
+        Display:     1,
+    }
+    return fieldData
 }
 
 func (*TicketState) StatsFieldParameterBuild() {

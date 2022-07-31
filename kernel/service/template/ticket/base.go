@@ -9,7 +9,7 @@ type TF interface {
     TemplateEditRender(fieldtype string, FieldObject model.TemplateField) model.FieldData
     SearchSQLGet()
     EditFieldRender(fieldtype string, FieldObject model.TemplateField, value interface{}) model.FieldData
-    SearchFieldRender()
+    SearchFieldRender() model.FieldData
 }
 
 /*
